@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard - JuaKazi</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    .sidebar {
+      min-height: 100vh;
+      background: linear-gradient(180deg, #1e3a8a 0%, #2563eb 100%);
+    }
+    .sidebar a.active, .sidebar a:hover {
+      background: rgba(255,255,255,0.1);
+      color: #fff;
+    }
+    .card {
+      box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+    }
+  </style>
+</head>
+<body class="bg-gray-50">
+  <div class="flex min-h-screen">
+    <!-- Sidebar -->
+    <aside class="sidebar w-64 text-white flex flex-col py-8 px-4">
+      <div class="mb-10 flex items-center space-x-2">
+        <i class="fas fa-user-shield text-2xl"></i>
+        <span class="text-2xl font-bold">JuaKazi Admin</span>
+      </div>
+      <nav class="flex-1 space-y-2">
+        <a href="#" class="block py-2.5 px-4 rounded transition active"><i class="fas fa-tachometer-alt mr-2"></i>Dashboard</a>
+  <a href="users.php" class="block py-2.5 px-4 rounded transition"><i class="fas fa-users mr-2"></i>Users</a>
+        <a href="services.html" class="block py-2.5 px-4 rounded transition"><i class="fas fa-briefcase mr-2"></i>Services</a>
+        <a href="#" class="block py-2.5 px-4 rounded transition"><i class="fas fa-comments mr-2"></i>Messages</a>
+        <a href="#" class="block py-2.5 px-4 rounded transition"><i class="fas fa-cogs mr-2"></i>Settings</a>
+      </nav>
+      <div class="mt-auto">
+        <a href="index.html" class="block py-2.5 px-4 rounded transition bg-blue-900 text-center hover:bg-blue-700"><i class="fas fa-home mr-2"></i>Back to Site</a>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 p-8">
+      <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-8">
+        <div>
+          <h1 class="text-3xl font-bold text-gray-900">Dashboard</h1>
+          <p class="text-gray-500 mt-2">Welcome, Admin! Here’s an overview of your platform.</p>
+        </div>
+        <div class="mt-4 md:mt-0 flex space-x-2">
+          <button class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"><i class="fas fa-plus mr-2"></i>Add Service</button>
+          <button class="bg-gray-200 text-gray-700 px-4 py-2 rounded hover:bg-gray-300"><i class="fas fa-user-plus mr-2"></i>Add User</button>
+        </div>
+      </div>
+
+      <!-- Stats Cards -->
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-10">
+        <div class="card bg-white rounded-lg p-6 flex flex-col items-center">
+          <i class="fas fa-users text-3xl text-blue-600 mb-2"></i>
+          <div class="text-2xl font-bold" id="total-users">1,245</div>
+          <div class="text-gray-500">Total Users</div>
+        </div>
+        <div class="card bg-white rounded-lg p-6 flex flex-col items-center">
+          <i class="fas fa-briefcase text-3xl text-green-600 mb-2"></i>
+          <div class="text-2xl font-bold" id="total-services">320</div>
+          <div class="text-gray-500">Services</div>
+        </div>
+        <div class="card bg-white rounded-lg p-6 flex flex-col items-center">
+          <i class="fas fa-comments text-3xl text-purple-600 mb-2"></i>
+          <div class="text-2xl font-bold" id="total-messages">87</div>
+          <div class="text-gray-500">Messages</div>
+        </div>
+        <div class="card bg-white rounded-lg p-6 flex flex-col items-center">
+          <i class="fas fa-user-shield text-3xl text-yellow-500 mb-2"></i>
+          <div class="text-2xl font-bold" id="total-admins">5</div>
+          <div class="text-gray-500">Admins</div>
+        </div>
+      </div>
+      <!-- Graphs -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+        <div class="bg-white rounded-lg shadow p-6">
+          <h2 class="text-lg font-bold mb-4">User Registrations (Last 6 Months)</h2>
+          <canvas id="regChart" height="120"></canvas>
+        </div>
+        <div class="bg-white rounded-lg shadow p-6">
+          <h2 class="text-lg font-bold mb-4">Site Traffic (Demo)</h2>
+          <canvas id="trafficChart" height="120"></canvas>
+        </div>
+      </div>
+      <!-- Search User -->
+      <div class="mb-8">
+        <form id="search-form" class="flex max-w-md">
+          <input type="text" id="search-user" placeholder="Search user by name or email..." class="flex-1 px-4 py-2 border border-gray-300 rounded-l focus:outline-none">
+          <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-r hover:bg-blue-700">Search</button>
+        </form>
+      </div>
+
+      <!-- Recent Users Table -->
+      <div class="bg-white rounded-lg shadow p-6 mb-10">
+        <h2 class="text-xl font-bold mb-4">Recent Users</h2>
+        <div class="overflow-x-auto">
+          <table class="min-w-full divide-y divide-gray-200">
+            <thead>
+              <tr>
+                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Name</th>
+                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Email</th>
+                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Role</th>
+                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Joined</th>
+                <th class="px-4 py-2"></th>
+              </tr>
+            </thead>
+            <tbody id="recent-users">
+              <!-- Populated by JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Recent Messages Table -->
+      <div class="bg-white rounded-lg shadow p-6">
+        <h2 class="text-xl font-bold mb-4">Recent Messages</h2>
+        <div class="overflow-x-auto">
+          <table class="min-w-full divide-y divide-gray-200">
+            <thead>
+              <tr>
+                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">From</th>
+                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Message</th>
+                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Date</th>
+              </tr>
+            </thead>
+            <tbody id="recent-messages">
+              <!-- Populated by JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    // Example data for demonstration
+    const users = [
+      { name: 'Jane Doe', email: 'jane@example.com', role: 'Provider', joined: '2025-09-01' },
+      { name: 'John Smith', email: 'john@example.com', role: 'Customer', joined: '2025-08-28' },
+      { name: 'Mary Wanjiku', email: 'mary@example.com', role: 'Provider', joined: '2025-08-25' },
+      { name: 'Ali Hassan', email: 'ali@example.com', role: 'Customer', joined: '2025-08-20' },
+    ];
+    const messages = [
+      { from: 'Jane Doe', message: 'How do I update my profile?', date: '2025-09-07' },
+      { from: 'John Smith', message: 'Can I book two services at once?', date: '2025-09-06' },
+      { from: 'Mary Wanjiku', message: 'Payment not going through.', date: '2025-09-05' },
+    ];
+
+    // Populate recent users with Edit/Delete
+    function renderUsers(filter = "") {
+      usersTbody.innerHTML = "";
+      users.filter(u =>
+        u.name.toLowerCase().includes(filter.toLowerCase()) ||
+        u.email.toLowerCase().includes(filter.toLowerCase())
+      ).forEach(u => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td class="px-4 py-2">${u.name}</td><td class="px-4 py-2">${u.email}</td><td class="px-4 py-2">${u.role}</td><td class="px-4 py-2">${u.joined}</td><td class="px-4 py-2 text-center"><button class='edit-btn action-btn bg-yellow-400 text-white rounded px-3 py-1 mr-2 hover:bg-yellow-500'>Edit</button><button class='delete-btn action-btn bg-red-500 text-white rounded px-3 py-1 hover:bg-red-600'>Delete</button></td>`;
+        // Edit button (demo)
+        tr.querySelector('.edit-btn').onclick = () => alert('Edit user: ' + u.name);
+        // Delete button (demo)
+        tr.querySelector('.delete-btn').onclick = () => {
+          if (confirm('Are you sure you want to delete ' + u.name + '?')) {
+            usersTbody.removeChild(tr);
+          }
+        };
+        usersTbody.appendChild(tr);
+      });
+    }
+    renderUsers();
+    // Search functionality
+    document.getElementById('search-form').onsubmit = function(e) {
+      e.preventDefault();
+      renderUsers(document.getElementById('search-user').value);
+    };
+    // Graphs (Chart.js)
+    const regCtx = document.getElementById('regChart').getContext('2d');
+    new Chart(regCtx, {
+      type: 'line',
+      data: {
+        labels: ['2025-04', '2025-05', '2025-06', '2025-07', '2025-08', '2025-09'],
+        datasets: [{
+          label: 'Registrations',
+          data: [20, 35, 50, 40, 60, 45],
+          backgroundColor: 'rgba(37,99,235,0.2)',
+          borderColor: '#2563eb',
+          borderWidth: 2,
+          fill: true,
+          tension: 0.4
+        }]
+      },
+      options: { plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } }
+    });
+    const trafficCtx = document.getElementById('trafficChart').getContext('2d');
+    new Chart(trafficCtx, {
+      type: 'bar',
+      data: {
+        labels: ['Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep'],
+        datasets: [{
+          label: 'Visits',
+          data: [120, 150, 180, 140, 200, 170],
+          backgroundColor: 'rgba(16,185,129,0.7)',
+          borderColor: '#10b981',
+          borderWidth: 1
+        }]
+      },
+      options: { plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } }
+    });
+
+    // Populate recent messages
+    const messagesTbody = document.getElementById('recent-messages');
+    messages.forEach(m => {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `<td class="px-4 py-2">${m.from}</td><td class="px-4 py-2">${m.message}</td><td class="px-4 py-2">${m.date}</td>`;
+      messagesTbody.appendChild(tr);
+    });
+  </script>
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</body>
+</html>

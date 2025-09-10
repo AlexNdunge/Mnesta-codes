@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Services - JuaKazi</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="min-h-screen bg-gray-50">
+    <!-- Header -->
+    <header class="bg-white shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center py-6">
+                <div class="flex justify-start lg:w-0 lg:flex-1">
+                    <a href="index.html" class="text-2xl font-bold text-blue-600">JuaKazi</a>
+                </div>
+                <nav class="hidden md:flex space-x-10">
+                    <a href="index.html" class="text-blue-600 border-b-2 border-blue-600 px-3 py-2 rounded-md text-sm font-medium">Home</a>
+                    <a href="services.html" class="text-blue-600 border-b-2 border-blue-600 px-3 py-2 rounded-md text-sm font-medium">Services</a>
+                    <a href="about.html" class="text-blue-600 border-b-2 border-blue-600 px-3 py-2 rounded-md text-sm font-medium">About</a>
+                </nav>
+                <div class="hidden md:flex items-center justify-end md:flex-1 lg:w-0" id="auth-nav">
+                    <a href="signin.html" class="whitespace-nowrap text-base font-medium text-gray-500 hover:text-gray-900">Sign in</a>
+                    <a href="signup.html" class="ml-8 whitespace-nowrap inline-flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-blue-600 hover:bg-blue-700">Sign up</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="max-w-7xl mx-auto py-16 px-4 sm:px-6 lg:px-8">
+        <div class="text-center">
+            <h1 class="text-4xl font-extrabold text-gray-900 sm:text-5xl">
+                Find Services
+            </h1>
+            <p class="mt-4 text-xl text-gray-600">
+                Browse available services and book with trusted providers.
+            </p>
+        </div>
+
+        <!-- Search and Filter -->
+        <div class="mt-8 flex flex-col sm:flex-row gap-4">
+            <div class="flex-1">
+                <input
+                    type="text"
+                    id="search-input"
+                    placeholder="Search services..."
+                    class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+            </div>
+            <div class="sm:w-64">
+                <select
+                    id="category-filter"
+                    class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                    <option value="">All Categories</option>
+                    <option value="home-cleaning">Home Cleaning</option>
+                    <option value="plumbing">Plumbing</option>
+                    <option value="electrical">Electrical</option>
+                    <option value="carpentry">Carpentry</option>
+                    <option value="gardening">Gardening</option>
+                    <option value="tutoring">Tutoring</option>
+                    <option value="pet-care">Pet Care</option>
+                    <option value="beauty">Beauty</option>
+                    <option value="fitness">Fitness</option>
+                </select>
+            </div>
+        </div>
+        
+        <!-- Loading State -->
+        <div id="loading" class="mt-12 text-center hidden">
+            <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
+            <p class="mt-4 text-gray-600">Loading services...</p>
+        </div>
+
+        <!-- Services Grid -->
+        <div id="services-grid" class="mt-12 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
+            <!-- Sample Services (will be populated by JavaScript) -->
+        </div>
+
+        <!-- No Results -->
+        <div id="no-results" class="mt-12 text-center py-12 hidden">
+            <p class="text-gray-500 text-lg">No services found matching your criteria.</p>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-blue-900 text-white py-12">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="grid md:grid-cols-4 gap-8">
+                <div>
+                    <h3 class="text-xl font-bold mb-4">JuaKazi</h3>
+                    <p class="text-gray-400 mb-4">
+                        Connecting communities through trusted local services across Kenya.
+                    </p>
+                    <div class="social-icons flex space-x-4">
+                        <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Quick Links</h4>
+                    <ul class="space-y-2">
+                        <li><a href="index.html" class="text-gray-400 hover:text-white">Home</a></li>
+                        <li><a href="services.html" class="text-gray-400 hover:text-white">Services</a></li>
+                        <li><a href="about.html" class="text-gray-400 hover:text-white">About</a></li>
+                        <li><a href="contact.html" class="text-gray-400 hover:text-white">Contact</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">For Providers</h4>
+                    <ul class="space-y-2">
+                        <li><a href="signup.html" class="text-gray-400 hover:text-white">Join as Provider</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">Provider Guidelines</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">Success Stories</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">Support</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Legal</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white">Privacy Policy</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">Terms of Service</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">Cookie Policy</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">Disclaimer</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-gray-800 mt-8 pt-8 text-center">
+                <p class="text-gray-400">
+                    &copy; 2025 JuaKazi. All rights reserved. Made with ❤️ in Kenya.
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>

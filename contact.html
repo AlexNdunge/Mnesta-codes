@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact Us - JuaKazi</title>
+  <!-- Font Awesome for social icons -->
+  
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f9fafb;
+      margin: 0;
+      padding: 0;
+      color: #333;
+    }
+
+    .header {
+      background: #2563eb;
+      color: #fff;
+      text-align: center;
+      padding: 2rem 1rem;
+    }
+
+    .header h1 {
+      margin: 0;
+      font-size: 2rem;
+    }
+
+    .header nav {
+      margin-bottom: 1rem;
+    }
+
+    .header nav a {
+      color: #fff;
+      margin: 0 10px;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    .header nav a:hover {
+      text-decoration: underline;
+    }
+
+    .content {
+      max-width: 1000px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+    }
+
+    .contact-options {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .contact-card {
+      background: #fff;
+      padding: 1.5rem;
+      text-align: center;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      transition: transform 0.2s;
+    }
+
+    .contact-card:hover {
+      transform: translateY(-5px);
+    }
+
+    .contact-card i {
+      font-size: 2rem;
+      color: #2563eb;
+      margin-bottom: 0.5rem;
+    }
+
+    .contact-card h2 {
+      margin: 0.5rem 0;
+    }
+
+    .contact-card a {
+      display: inline-block;
+      margin-top: 0.5rem;
+      color: #2563eb;
+      font-weight: bold;
+      text-decoration: none;
+    }
+
+    .contact-card a:hover {
+      text-decoration: underline;
+    }
+
+    .social-media {
+      text-align: center;
+      margin-top: 2rem;
+    }
+
+    .social-icons a {
+      font-size: 2rem;
+      margin: 0 10px;
+      color: #444;
+      transition: color 0.3s;
+    }
+
+    .social-icons a:hover {
+      color: #2563eb;
+    }
+
+    .footer {
+      background: blue;
+      color: #fff;
+      text-align: center;
+      padding: 1rem;
+      margin-top: 3rem;
+    }
+  </style>
+</head>
+<body>
+  <nav class="bg-blue-600 p-4">
+    <div class="max-w-7xl mx-auto flex justify-between items-center">
+      <a href="index.html" class="text-white text-2xl font-bold">JuaKazi</a>
+    </div>
+  </nav>
+
+  <header class="header">
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="services.html">Service</a>
+      <a href="about.html">About</a>
+    </nav>
+    <h1>Contact Us</h1>
+    <p>We’re here to help! Reach out through any of the channels below.</p>
+  </header>
+
+  <main class="content">
+    <section class="contact-options">
+      <div class="contact-card">
+        <i class="fab fa-whatsapp"></i>
+        <h2>WhatsApp</h2>
+        <a href="https://wa.me/254795092962" target="_blank">Chat with us</a>
+      </div>
+
+      <div class="contact-card">
+        <i class="fas fa-phone"></i>
+        <h2>Phone Call</h2>
+        <a href="tel:+254795092962">+254 795 092 962</a>
+      </div>
+
+      <div class="contact-card">
+        <i class="fas fa-sms"></i>
+        <h2>SMS</h2>
+        <a href="sms:+254795092962">Send a message</a>
+      </div>
+
+      <div class="contact-card">
+        <i class="fas fa-envelope"></i>
+        <h2>Email</h2>
+        <a href="mailto:support@juakazi.com">support@juakazi.com</a>
+      </div>
+    </section>
+
+    <section class="social-media">
+      <h2>Follow Us</h2>
+      <div class="social-icons">
+        <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+        <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+        <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+        <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="bg-blue-800 text-gray-300">
+    <style>
+      .footer-section h3, .footer-section h4 { color: #fff; }
+      .footer-section ul li a { color: #d1d5db; transition: color 0.2s; }
+      .footer-section ul li a:hover { color: #fff; }
+      .footer-section p { color: #9ca3af; }
+      .footer-section { font-size: 1rem; }
+      .footer-section .border-t { border-top: 1px solid #374151; }
+    </style>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 footer-section">
+      <div class="grid md:grid-cols-3 gap-8">
+        <div>
+          <h3 class="text-xl font-bold">JuaKazi</h3>
+          <p class="mt-2">Connecting you with trusted service providers in your community.</p>
+        </div>
+        <div>
+          <h4 class="font-semibold">Services</h4>
+          <ul class="mt-3 space-y-2">
+            <li><a href="#">Home Services</a></li>
+            <li><a href="#">Personal Care</a></li>
+            <li><a href="#">Professional Services</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="font-semibold">Support</h4>
+          <ul class="mt-3 space-y-2">
+            <li><a href="contact.html">Help Center</a></li>
+            <li><a href="contact.html">Contact Us</a></li>
+            <li><a href="#">Safety</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="mt-8 border-t pt-6 text-center">
+        &copy; 2025 JuaKazi. All rights reserved.
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign Up - JuaKazi</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+  <div class="sm:mx-auto sm:w-full sm:max-w-md">
+    <a href="index.html" class="flex justify-center">
+      <span class="text-3xl font-bold text-blue-600">JUAKAZI</span>
+    </a>
+    <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">
+      Create your account
+    </h2>
+    <p class="mt-2 text-center text-sm text-gray-600">
+      Already have an account?
+      <a href="signin.html" class="font-medium text-blue-600 hover:text-blue-500">
+        Sign in here
+      </a>
+    </p>
+  </div>
+
+  <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
+    <div class="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
+      <div id="error-message" class="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded hidden"></div>
+
+      <!-- ✅ Only ONE form -->
+      <form class="space-y-6" id="signup-form" method="post" action="register.php">
+
+        <!-- Username -->
+        <div>
+          <label for="username" class="block text-sm font-medium text-gray-700">Username</label>
+          <div class="mt-1">
+            <input id="username" name="username" type="text" required
+              class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md 
+                     placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+              placeholder="Enter your username" />
+          </div>
+        </div>
+
+        <!-- Email -->
+        <div>
+          <label for="email" class="block text-sm font-medium text-gray-700">Email address</label>
+          <div class="mt-1">
+            <input id="email" name="email" type="email" required
+              class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md 
+                     placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+              placeholder="Enter your email" />
+          </div>
+        </div>
+
+        <!-- Account Type -->
+        <div>
+          <label for="role" class="block text-sm font-medium text-gray-700">Account Type</label>
+          <div class="mt-1">
+            <select id="role" name="role"
+              class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md 
+                     placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+              onchange="toggleProviderOptions()">
+              <option value="">-- Select Account Type --</option>
+              <option value="customer">Customer - Find services</option>
+              <option value="provider">Provider - Offer services</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Provider Services -->
+        <div id="providerOptions" class="mt-4 hidden">
+          <label for="service" class="block text-sm font-medium text-gray-700">Service Type</label>
+          <div class="mt-1">
+            <select id="service" name="service"
+              class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md 
+                     placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+              <option value="">-- Select Service --</option>
+              <option value="plumbing">Plumbing</option>
+              <option value="hairdressing">Hairdressing</option>
+              <option value="gardening">Gardening</option>
+              <option value="carpentry">Carpentry</option>
+              <option value="electrician">Electrician</option>
+              <option value="painting">Painting</option>
+              <option value="home-cleaning">Home Cleaning</option>
+              <option value="gardening">Gardening</option>
+              <option value="tutoring">Tutoring</option>
+              <option value="pet-care">Pet Care</option>
+              <option value="beauty">Beauty</option>
+              <option value="fitness">Fitness</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Password -->
+        <div>
+          <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
+          <div class="mt-1">
+            <input id="password" name="password" type="password" required minlength="6"
+              class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md 
+                     placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+              placeholder="Enter your password" />
+          </div>
+          <p class="mt-1 text-xs text-gray-500">Must be at least 6 characters</p>
+        </div>
+
+        <!-- Confirm Password -->
+        <div>
+          <label for="confirmPassword" class="block text-sm font-medium text-gray-700">Confirm Password</label>
+          <div class="mt-1">
+            <input id="confirmPassword" name="confirmPassword" type="password" required
+              class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md 
+                     placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+              placeholder="Confirm your password" />
+          </div>
+        </div>
+
+        <!-- Submit -->
+        <div>
+          <button type="submit" id="submit-btn"
+            class="group relative w-full flex justify-center py-2 px-4 border border-transparent 
+                   text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 
+                   focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+            Create Account
+          </button>
+        </div>
+      </form>
+    </div>
+    <div class="mt-4 text-center">
+      <a href="services.html" class="text-blue-600 hover:underline font-medium">View Available Services</a>
+    </div>
+  </div>
+
+  <!-- JS -->
+  <script>
+    function toggleProviderOptions() {
+      const role = document.getElementById("role").value;
+      const providerOptions = document.getElementById("providerOptions");
+      if (role === "provider") {
+        providerOptions.classList.remove("hidden");
+      } else {
+        providerOptions.classList.add("hidden");
+        document.getElementById("service").value = ""; // reset
+      }
+    }
+  </script>
+</body>
+</html>

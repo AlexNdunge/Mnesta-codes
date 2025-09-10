@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JuaKazi - Find Trusted Service Providers</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="min-h-screen bg-gray-50">
+
+  <!-- Header -->
+  <header class="bg-white shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center py-6">
+      <!-- Logo -->
+      <a href="index.html" class="text-2xl font-bold text-blue-600">JUAKAZI</a>
+
+      <!-- Desktop Nav -->
+      <nav class="hidden md:flex space-x-8">
+        <a href="services.html" class="text-blue-600 border-b-2 border-blue-600 px-3 py-2 rounded-md text-sm font-medium">Services</a>
+        <a href="about.html" class="text-gray-600 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium">About</a>
+        <a href="contact.html" class="text-gray-600 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium">Contact Us</a>
+        <a href="policy.html" class="text-gray-600 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium">Privacy & Policy</a>
+      </nav>
+
+      <!-- Desktop Buttons -->
+      <div class="hidden md:flex space-x-4">
+        <a href="signin.html" class="text-gray-600 hover:text-blue-600">Log In</a>
+        <a href="signup.html" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">Sign Up</a>
+      </div>
+
+      <!-- Mobile Hamburger Button -->
+      <button id="menu-btn" class="md:hidden text-gray-600 hover:text-blue-600 focus:outline-none text-2xl">
+        ☰
+      </button>
+    </div>
+
+    <!-- Mobile Menu -->
+    <div id="mobile-menu" class="hidden md:hidden bg-white px-4 pt-4 pb-6 space-y-4 shadow">
+      <a href="services.html" class="block text-gray-700 hover:text-blue-600">Services</a>
+      <a href="about.html" class="block text-gray-700 hover:text-blue-600">About</a>
+      <a href="contact.html" class="block text-gray-700 hover:text-blue-600">Contact Us</a>
+      <a href="policy.html" class="block text-gray-700 hover:text-blue-600">Privacy & Policy</a>
+      <hr class="border-gray-200">
+      <a href="signin.html" class="block text-gray-700 hover:text-blue-600">Sign In</a>
+      <a href="signup.html" class="block px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">Sign Up</a>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:grid lg:grid-cols-12 lg:gap-8 lg:items-center">
+      
+      <!-- Left Content -->
+      <div class="lg:col-span-6 text-center lg:text-left">
+        <h1 class="text-4xl sm:text-5xl font-extrabold text-gray-900">
+          Find Trusted <span class="text-blue-600">Service Providers</span>
+        </h1>
+        <p class="mt-4 text-lg text-gray-600">
+          Connect with verified professionals for all your service needs. From home repairs to personal services, find the right person for the job.
+        </p>
+        <div class="mt-6 flex flex-col sm:flex-row gap-3 justify-center lg:justify-start">
+          <a href="services.html" class="px-6 py-3 bg-blue-600 text-white rounded-md hover:bg-blue-700">
+            Find Services
+          </a>
+          <a href="signup.html" class="px-6 py-3 bg-blue-100 text-blue-700 rounded-md hover:bg-blue-200">
+            Become a Provider
+          </a>
+        </div>
+      </div>
+
+      <!-- Right Image -->
+      <div class="lg:col-span-6 mt-10 lg:mt-0 flex justify-center">
+        <img src="toon.png" alt="Cartoon service worker illustration" class="w-80 h-auto">
+      </div>
+    </div>
+  </section>
+
+  <!-- Popular Categories -->
+  <section class="py-12 bg-gray-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <h2 class="text-blue-600 font-semibold tracking-wide uppercase">Popular Categories</h2>
+      <p class="mt-2 text-3xl font-extrabold text-gray-900">Services you need, providers you trust</p>
+
+      <div class="mt-10 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-8">
+        <div><div class="w-14 h-14 flex items-center justify-center bg-blue-500 text-white rounded-md text-2xl mx-auto">🏠</div><p class="mt-3 font-medium">Home Cleaning</p></div>
+        <div><div class="w-14 h-14 flex items-center justify-center bg-blue-500 text-white rounded-md text-2xl mx-auto">🔧</div><p class="mt-3 font-medium">Plumbing</p></div>
+        <div><div class="w-14 h-14 flex items-center justify-center bg-blue-500 text-white rounded-md text-2xl mx-auto">⚡</div><p class="mt-3 font-medium">Electrical</p></div>
+        <div><div class="w-14 h-14 flex items-center justify-center bg-blue-500 text-white rounded-md text-2xl mx-auto">🌱</div><p class="mt-3 font-medium">Gardening</p></div>
+        <div><div class="w-14 h-14 flex items-center justify-center bg-blue-500 text-white rounded-md text-2xl mx-auto">📚</div><p class="mt-3 font-medium">Tutoring</p></div>
+        <div><div class="w-14 h-14 flex items-center justify-center bg-blue-500 text-white rounded-md text-2xl mx-auto">🐕</div><p class="mt-3 font-medium">Pet Care</p></div>
+        <div><div class="w-14 h-14 flex items-center justify-center bg-blue-500 text-white rounded-md text-2xl mx-auto">💄</div><p class="mt-3 font-medium">Beauty</p></div>
+        <div><div class="w-14 h-14 flex items-center justify-center bg-blue-500 text-white rounded-md text-2xl mx-auto">💪</div><p class="mt-3 font-medium">Fitness</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- How it Works -->
+  <section class="py-12 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <h2 class="text-blue-600 font-semibold tracking-wide uppercase">How it Works</h2>
+      <p class="mt-2 text-3xl font-extrabold text-gray-900">Simple steps to get things done</p>
+
+      <div class="mt-10 grid gap-8 md:grid-cols-3">
+        <div>
+          <div class="w-12 h-12 flex items-center justify-center bg-blue-500 text-white rounded-md text-xl mx-auto">1</div>
+          <h3 class="mt-4 font-medium text-gray-900">Search & Browse</h3>
+          <p class="mt-2 text-gray-600">Find the service you need and browse verified providers in your area.</p>
+        </div>
+        <div>
+          <div class="w-12 h-12 flex items-center justify-center bg-blue-500 text-white rounded-md text-xl mx-auto">2</div>
+          <h3 class="mt-4 font-medium text-gray-900">Compare & Choose</h3>
+          <p class="mt-2 text-gray-600">Compare profiles, reviews, and prices to choose the best provider.</p>
+        </div>
+        <div>
+          <div class="w-12 h-12 flex items-center justify-center bg-blue-500 text-white rounded-md text-xl mx-auto">3</div>
+          <h3 class="mt-4 font-medium text-gray-900">Book & Enjoy</h3>
+          <p class="mt-2 text-gray-600">Book the service and enjoy professional work with peace of mind.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-blue-800 text-gray-300">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div class="grid md:grid-cols-3 gap-8">
+        <div>
+          <h3 class="text-white text-xl font-bold">JuaKazi</h3>
+          <p class="mt-2 text-gray-400">Connecting you with trusted service providers in your community.</p>
+        </div>
+        <div>
+          <h4 class="text-white font-semibold">Services</h4>
+          <ul class="mt-3 space-y-2">
+            <li><a href="#" class="hover:text-white">Home Services</a></li>
+            <li><a href="#" class="hover:text-white">Personal Care</a></li>
+            <li><a href="#" class="hover:text-white">Professional Services</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="text-white font-semibold">Support</h4>
+          <ul class="mt-3 space-y-2">
+            <li><a href="contact.html" class="hover:text-white">Help Center</a></li>
+            <li><a href="contact.html" class="hover:text-white">Contact Us</a></li>
+            <li><a href="#" class="hover:text-white">Safety</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="mt-8 border-t border-gray-700 pt-6 text-center text-gray-400">
+        &copy; 2025 JuaKazi. All rights reserved.
+      </div>
+    </div>
+  </footer>
+
+  <!-- JS for Mobile Menu -->
+  <script>
+    const menuBtn = document.getElementById('menu-btn');
+    const mobileMenu = document.getElementById('mobile-menu');
+
+    menuBtn.addEventListener('click', () => {
+      mobileMenu.classList.toggle('hidden');
+    });
+  </script>
+</body>
+</html>
