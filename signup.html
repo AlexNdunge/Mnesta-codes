@@ -28,7 +28,8 @@
       <div id="error-message" class="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded hidden"></div>
 
       <!-- ✅ Only ONE form -->
-      <form class="space-y-6" id="signup-form" method="post" action="register.php">
+       <form method="post" action="register.php">
+
 
         <!-- Username -->
         <div>
@@ -75,42 +76,110 @@
               class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md 
                      placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500">
               <option value="">-- Select Service --</option>
-              <option value="plumbing">Plumbing</option>
-              <option value="hairdressing">Hairdressing</option>
-              <option value="gardening">Gardening</option>
-              <option value="carpentry">Carpentry</option>
-              <option value="electrician">Electrician</option>
-              <option value="painting">Painting</option>
-              <option value="home-cleaning">Home Cleaning</option>
-              <option value="gardening">Gardening</option>
-              <option value="tutoring">Tutoring</option>
-              <option value="pet-care">Pet Care</option>
-              <option value="beauty">Beauty</option>
-              <option value="fitness">Fitness</option>
+              <option value="Plumbing">Plumbing</option>
+              <option value="Hairdressing">Hairdressing</option>
+              <option value="Gardening">Gardening</option>
+              <option value="Carpentry">Carpentry</option>
+              <option value="Electrical">Electrical</option>
+              <option value="Painting">Painting</option>
+              <option value="Home Cleaning">Home Cleaning</option>
+              <option value="Tutoring">Tutoring</option>
+              <option value="Pet Care">Pet Care</option>
+              <option value="Beauty">Beauty</option>
+              <option value="Fitness">Fitness</option>
             </select>
+          </div>
+
+          <!-- Phone Number -->
+          <div class="mt-4">
+            <label for="phone" class="block text-sm font-medium text-gray-700">Phone Number</label>
+            <div class="mt-1">
+              <input id="phone" name="phone" type="tel" 
+                class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md 
+                       placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                placeholder="e.g., +254712345678" />
+            </div>
+          </div>
+
+          <!-- Location -->
+          <div class="mt-4">
+            <label for="location" class="block text-sm font-medium text-gray-700">Location</label>
+            <div class="mt-1">
+              <input id="location" name="location" type="text" 
+                class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md 
+                       placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                placeholder="e.g., Nairobi, Kenya" />
+            </div>
+          </div>
+
+          <!-- About -->
+          <div class="mt-4">
+            <label for="about" class="block text-sm font-medium text-gray-700">About Your Service</label>
+            <div class="mt-1">
+              <textarea id="about" name="about" rows="3"
+                class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md 
+                       placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                placeholder="Describe your experience and services..."></textarea>
+            </div>
+          </div>
+
+          <!-- Profile Image -->
+          <div class="mt-4">
+            <label for="profile_image" class="block text-sm font-medium text-gray-700">Profile Image (Optional)</label>
+            <div class="mt-1">
+              <input id="profile_image" name="profile_image" type="file" accept="image/*"
+                class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md 
+                       focus:outline-none focus:ring-blue-500 focus:border-blue-500" />
+              <p class="mt-1 text-xs text-gray-500">Upload a profile picture (JPG, PNG, max 2MB)</p>
+            </div>
           </div>
         </div>
 
         <!-- Password -->
         <div>
           <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
-          <div class="mt-1">
-            <input id="password" name="password" type="password" required minlength="6"
-              class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md 
-                     placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-              placeholder="Enter your password" />
+          <div class="mt-1 relative">
+            <input id="password" name="password" type="password" required minlength="8"
+                   pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
+                   title="Must contain at least one number, one uppercase and lowercase letter, and at least 8 or more characters"
+                   class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md 
+                          placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 pr-10"
+                   placeholder="Enter your password" />
+            <button type="button" 
+                    class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600"
+                    onclick="togglePasswordVisibility('password')">
+              <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+              </svg>
+            </button>
           </div>
-          <p class="mt-1 text-xs text-gray-500">Must be at least 6 characters</p>
+          <p class="mt-1 text-xs text-gray-500">
+            Password must be at least 8 characters long and include:
+            <ul class="list-disc pl-5 mt-1">
+              <li>One uppercase letter</li>
+              <li>One lowercase letter</li>
+              <li>One number</li>
+            </ul>
+          </p>
         </div>
 
         <!-- Confirm Password -->
         <div>
           <label for="confirmPassword" class="block text-sm font-medium text-gray-700">Confirm Password</label>
-          <div class="mt-1">
+          <div class="mt-1 relative">
             <input id="confirmPassword" name="confirmPassword" type="password" required
               class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md 
-                     placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                     placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 pr-10"
               placeholder="Confirm your password" />
+            <button type="button" 
+                    class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600"
+                    onclick="togglePasswordVisibility('confirmPassword')">
+              <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+              </svg>
+            </button>
           </div>
         </div>
 
@@ -132,16 +201,142 @@
 
   <!-- JS -->
   <script>
-    function toggleProviderOptions() {
-      const role = document.getElementById("role").value;
-      const providerOptions = document.getElementById("providerOptions");
-      if (role === "provider") {
-        providerOptions.classList.remove("hidden");
+    function togglePasswordVisibility(fieldId) {
+      const field = document.getElementById(fieldId);
+      const button = field.nextElementSibling;
+      const icon = button.querySelector('svg');
+      
+      if (field.type === 'password') {
+        field.type = 'text';
+        icon.innerHTML = `
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"></path>
+        `;
       } else {
-        providerOptions.classList.add("hidden");
-        document.getElementById("service").value = ""; // reset
+        field.type = 'password';
+        icon.innerHTML = `
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+        `;
       }
     }
+    function toggleProviderOptions() {
+      const roleSelect = document.getElementById('role');
+      const providerOptions = document.getElementById('providerOptions');
+      const serviceSelect = document.getElementById('service');
+      const phoneInput = document.getElementById('phone');
+      const locationInput = document.getElementById('location');
+      const aboutInput = document.getElementById('about');
+      
+      if (roleSelect.value === 'provider') {
+        providerOptions.classList.remove('hidden');
+        serviceSelect.required = true;
+        phoneInput.required = true;
+        locationInput.required = true;
+        aboutInput.required = true;
+      } else {
+        providerOptions.classList.add('hidden');
+        serviceSelect.required = false;
+        phoneInput.required = false;
+        locationInput.required = false;
+        aboutInput.required = false;
+        serviceSelect.value = '';
+        phoneInput.value = '';
+        locationInput.value = '';
+        aboutInput.value = '';
+      }
+    }
+
+    // Handle form submission
+    document.addEventListener('DOMContentLoaded', function() {
+      const form = document.querySelector('form');
+      const errorMessage = document.getElementById('error-message');
+      
+      form.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        
+        // Show loading state
+        const submitButton = form.querySelector('button[type="submit"]');
+        const originalButtonText = submitButton.innerHTML;
+        submitButton.disabled = true;
+        submitButton.innerHTML = 'Creating Account...';
+        
+        // Clear previous errors
+        errorMessage.classList.add('hidden');
+        errorMessage.innerHTML = '';
+        errorMessage.classList.remove('bg-green-100', 'border-green-400', 'text-green-700');
+        errorMessage.classList.add('bg-red-100', 'border-red-400', 'text-red-700');
+        
+        try {
+          // Get form data
+          const formData = new FormData(form);
+          
+          // Send AJAX request
+          const response = await fetch('register.php', {
+            method: 'POST',
+            body: formData,
+            headers: {
+              'Accept': 'application/json'
+            }
+          });
+          
+          // Parse JSON response
+          const data = await response.json();
+          
+          if (!response.ok) {
+            throw new Error(data.message || 'Server error');
+          }
+          
+          if (data.success) {
+            // Show success message
+            errorMessage.textContent = data.message || 'Registration successful! Redirecting...';
+            errorMessage.classList.remove('bg-red-100', 'border-red-400', 'text-red-700');
+            errorMessage.classList.add('bg-green-100', 'border-green-400', 'text-green-700');
+            errorMessage.classList.remove('hidden');
+            
+            console.log('Registration successful:', data);
+            
+            // Redirect after a short delay
+            if (data.redirect) {
+              setTimeout(() => {
+                window.location.href = data.redirect;
+              }, 1500);
+            }
+          } else {
+            // Show error message
+            let errorMsg = data.message || 'An error occurred. Please try again.';
+            
+            // Add validation errors if they exist
+            if (data.errors && Array.isArray(data.errors)) {
+              errorMsg += '<br><br>' + data.errors.map(error => `• ${error}`).join('<br>');
+            }
+            
+            errorMessage.innerHTML = errorMsg;
+            errorMessage.classList.remove('hidden');
+          }
+        } catch (error) {
+          console.error('Registration error:', error);
+          let errorMsg = 'An error occurred while processing your request. ';
+          
+          // Add debug info if available
+          if (error.response) {
+            console.error('Response status:', error.response.status);
+            console.error('Response data:', error.response.data);
+          }
+          
+          errorMessage.textContent = errorMsg + (data?.debug ? ' (' + data.debug + ')' : '');
+          errorMessage.classList.remove('hidden');
+        } finally {
+          // Reset button state
+          submitButton.disabled = false;
+          submitButton.innerHTML = originalButtonText;
+          
+          // Scroll to error message if it's visible
+          if (!errorMessage.classList.contains('hidden')) {
+            errorMessage.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          }
+        }
+      });
+    });
   </script>
 </body>
 </html>

@@ -54,15 +54,7 @@
                     class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 >
                     <option value="">All Categories</option>
-                    <option value="home-cleaning">Home Cleaning</option>
-                    <option value="plumbing">Plumbing</option>
-                    <option value="electrical">Electrical</option>
-                    <option value="carpentry">Carpentry</option>
-                    <option value="gardening">Gardening</option>
-                    <option value="tutoring">Tutoring</option>
-                    <option value="pet-care">Pet Care</option>
-                    <option value="beauty">Beauty</option>
-                    <option value="fitness">Fitness</option>
+                    <!-- Categories will be populated dynamically -->
                 </select>
             </div>
         </div>
@@ -81,6 +73,59 @@
         <!-- No Results -->
         <div id="no-results" class="mt-12 text-center py-12 hidden">
             <p class="text-gray-500 text-lg">No services found matching your criteria.</p>
+        </div>
+    </div>
+
+    <!-- Booking Modal -->
+    <div id="bookingModal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
+        <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+            <div class="mt-3">
+                <h3 class="text-lg font-bold text-gray-900 mb-4">Book Service</h3>
+                <div id="modalContent">
+                    <p class="text-sm text-gray-600 mb-4">
+                        Provider: <span id="providerName" class="font-semibold"></span><br>
+                        Service: <span id="serviceName" class="font-semibold"></span><br>
+                        Booking Fee: <span class="font-semibold text-green-600">KSh 149</span>
+                    </p>
+                    
+                    <form id="bookingForm">
+                        <input type="hidden" id="providerId" name="provider_id">
+                        
+                        <div class="mb-4">
+                            <label for="customerPhone" class="block text-sm font-medium text-gray-700 mb-2">
+                                Your Phone Number (M-Pesa)
+                            </label>
+                            <input type="tel" id="customerPhone" name="customer_phone" required
+                                pattern="^254[0-9]{9}$"
+                                placeholder="254712345678"
+                                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
+                            <p class="text-xs text-gray-500 mt-1">Format: 254XXXXXXXXX</p>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label for="bookingNotes" class="block text-sm font-medium text-gray-700 mb-2">
+                                Additional Notes (Optional)
+                            </label>
+                            <textarea id="bookingNotes" name="notes" rows="3"
+                                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                                placeholder="Any specific requirements..."></textarea>
+                        </div>
+                        
+                        <div class="flex gap-3">
+                            <button type="submit" id="payButton"
+                                class="flex-1 bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg">
+                                Pay with M-Pesa
+                            </button>
+                            <button type="button" onclick="closeBookingModal()"
+                                class="flex-1 bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-lg">
+                                Cancel
+                            </button>
+                        </div>
+                    </form>
+                    
+                    <div id="paymentStatus" class="hidden mt-4 p-3 rounded-md"></div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -136,6 +181,319 @@
         </div>
     </footer>
 
-    <script src="script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const servicesGrid = document.getElementById('services-grid');
+            const loadingElement = document.getElementById('loading');
+            const noResultsElement = document.getElementById('no-results');
+            const searchInput = document.getElementById('search-input');
+            const categoryFilter = document.getElementById('category-filter');
+            
+            // Load categories and services when page loads
+            loadCategories();
+            loadServices();
+            
+            // Add event listeners for search and filter
+            searchInput.addEventListener('input', debounce(loadServices, 300));
+            categoryFilter.addEventListener('change', loadServices);
+            
+            // Function to load categories
+            async function loadCategories() {
+                try {
+                    const response = await fetch('services.php?get_categories=1', {
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest',
+                            'Accept': 'application/json'
+                        }
+                    });
+                    
+                    if (response.ok) {
+                        const data = await response.json();
+                        if (data.categories) {
+                            categoryFilter.innerHTML = '<option value="">All Categories</option>';
+                            data.categories.forEach(cat => {
+                                const option = document.createElement('option');
+                                option.value = cat.slug;
+                                option.textContent = cat.name;
+                                categoryFilter.appendChild(option);
+                            });
+                        }
+                    }
+                } catch (error) {
+                    console.error('Error loading categories:', error);
+                }
+            }
+            
+            // Function to load services
+            async function loadServices() {
+                showLoading(true);
+                
+                try {
+                    const searchTerm = searchInput.value.trim();
+                    const category = categoryFilter.value;
+                    
+                    // Build query parameters
+                    const params = new URLSearchParams();
+                    if (searchTerm) params.append('search', searchTerm);
+                    if (category) params.append('category', category);
+                    
+                    // Fetch services from the server
+                    const response = await fetch(`services.php?${params.toString()}`, {
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest',
+                            'Accept': 'application/json'
+                        }
+                    });
+                    
+                    if (!response.ok) {
+                        throw new Error('Failed to load services');
+                    }
+                    
+                    const data = await response.json();
+                    displayServices(data.providers || []);
+                    
+                } catch (error) {
+                    console.error('Error loading services:', error);
+                    showError('Failed to load services. Please try again later.');
+                } finally {
+                    showLoading(false);
+                }
+            }
+            
+            // Function to display services in the grid
+            function displayServices(providers) {
+                if (!providers || providers.length === 0) {
+                    noResultsElement.classList.remove('hidden');
+                    servicesGrid.innerHTML = '';
+                    return;
+                }
+                
+                noResultsElement.classList.add('hidden');
+                
+                servicesGrid.innerHTML = providers.map(provider => `
+                    <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
+                        <div class="p-6">
+                            <div class="flex items-center space-x-4 mb-4">
+                                ${provider.profile_image ? 
+                                    `<img src="${provider.profile_image}" alt="${provider.username}" class="w-16 h-16 rounded-full object-cover">` : 
+                                    `<div class="w-16 h-16 rounded-full bg-gray-200 flex items-center justify-center text-gray-500 text-2xl font-semibold">
+                                        ${provider.username.charAt(0).toUpperCase()}
+                                    </div>`
+                                }
+                                <div>
+                                    <h2 class="text-xl font-bold text-gray-800">
+                                        ${provider.username}
+                                    </h2>
+                                    <p class="text-blue-600 font-medium">
+                                        ${provider.service}
+                                    </p>
+                                </div>
+                            </div>
+                            
+                            ${provider.location ? `
+                                <p class="text-gray-600 mb-2 flex items-center">
+                                    <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd" />
+                                    </svg>
+                                    ${provider.location}
+                                </p>
+                            ` : ''}
+                            
+                            ${provider.about ? `
+                                <p class="text-gray-600 text-sm mb-4 line-clamp-2">
+                                    ${provider.about}
+                                </p>
+                            ` : ''}
+                            
+                            <div class="flex items-center justify-between mt-4">
+                                <div class="flex items-center">
+                                    <span class="text-yellow-400 text-lg">★</span>
+                                    <span class="ml-1 text-gray-700">
+                                        ${parseFloat(provider.rating || 0).toFixed(1)} (${provider.review_count || 0} reviews)
+                                    </span>
+                                </div>
+                            </div>
+                            
+                            ${provider.phone ? `
+                                <div class="mt-4 pt-4 border-t border-gray-200">
+                                    <a href="tel:${provider.phone}" class="text-blue-600 hover:text-blue-800 font-medium flex items-center mb-3">
+                                        <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                            <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z" />
+                                        </svg>
+                                        ${provider.phone}
+                                    </a>
+                                </div>
+                            ` : ''}
+                            
+                            <div class="mt-4">
+                                <button onclick="openBookingModal(${provider.id}, '${provider.username}', '${provider.service}')" 
+                                    class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg transition-colors duration-200">
+                                    Book Now - KSh 149
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+            }
+            
+            // Helper function to generate star rating HTML
+            function getStarRating(rating) {
+                const fullStars = Math.floor(rating);
+                const hasHalfStar = rating % 1 >= 0.5;
+                let stars = '';
+                
+                for (let i = 1; i <= 5; i++) {
+                    if (i <= fullStars) {
+                        stars += '<i class="fas fa-star text-yellow-400"></i>';
+                    } else if (i === fullStars + 1 && hasHalfStar) {
+                        stars += '<i class="fas fa-star-half-alt text-yellow-400"></i>';
+                    } else {
+                        stars += '<i class="far fa-star text-yellow-400"></i>';
+                    }
+                }
+                
+                return stars;
+            }
+            
+            // Helper function to show/hide loading state
+            function showLoading(show) {
+                if (show) {
+                    loadingElement.classList.remove('hidden');
+                } else {
+                    loadingElement.classList.add('hidden');
+                }
+            }
+            
+            // Helper function to show error message
+            function showError(message) {
+                noResultsElement.textContent = message;
+                noResultsElement.classList.remove('hidden');
+            }
+            
+            // Debounce function to limit API calls during typing
+            function debounce(func, wait) {
+                let timeout;
+                return function executedFunction(...args) {
+                    const later = () => {
+                        clearTimeout(timeout);
+                        func(...args);
+                    };
+                    clearTimeout(timeout);
+                    timeout = setTimeout(later, wait);
+                };
+            }
+            
+            // Load Font Awesome for icons
+            const fontAwesome = document.createElement('link');
+            fontAwesome.rel = 'stylesheet';
+            fontAwesome.href = 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css';
+            document.head.appendChild(fontAwesome);
+        });
+        
+        // Booking Modal Functions
+        function openBookingModal(providerId, providerName, serviceName) {
+            document.getElementById('providerId').value = providerId;
+            document.getElementById('providerName').textContent = providerName;
+            document.getElementById('serviceName').textContent = serviceName;
+            document.getElementById('bookingModal').classList.remove('hidden');
+            document.getElementById('paymentStatus').classList.add('hidden');
+        }
+        
+        function closeBookingModal() {
+            document.getElementById('bookingModal').classList.add('hidden');
+            document.getElementById('bookingForm').reset();
+        }
+        
+        // Handle booking form submission
+        document.addEventListener('DOMContentLoaded', function() {
+            const bookingForm = document.getElementById('bookingForm');
+            
+            bookingForm.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                const payButton = document.getElementById('payButton');
+                const paymentStatus = document.getElementById('paymentStatus');
+                const originalButtonText = payButton.innerHTML;
+                
+                // Disable button and show loading
+                payButton.disabled = true;
+                payButton.innerHTML = 'Processing...';
+                
+                try {
+                    const formData = new FormData(bookingForm);
+                    
+                    // Send booking request
+                    const response = await fetch('process_booking.php', {
+                        method: 'POST',
+                        body: formData
+                    });
+                    
+                    const data = await response.json();
+                    
+                    if (data.success) {
+                        // Show success message
+                        paymentStatus.className = 'mt-4 p-3 rounded-md bg-green-100 border border-green-400 text-green-700';
+                        paymentStatus.textContent = data.message || 'Payment initiated! Check your phone for M-Pesa prompt.';
+                        paymentStatus.classList.remove('hidden');
+                        
+                        // Check payment status
+                        if (data.checkout_request_id) {
+                            checkPaymentStatus(data.checkout_request_id);
+                        }
+                    } else {
+                        // Show error message
+                        paymentStatus.className = 'mt-4 p-3 rounded-md bg-red-100 border border-red-400 text-red-700';
+                        paymentStatus.textContent = data.message || 'Booking failed. Please try again.';
+                        paymentStatus.classList.remove('hidden');
+                    }
+                } catch (error) {
+                    console.error('Booking error:', error);
+                    paymentStatus.className = 'mt-4 p-3 rounded-md bg-red-100 border border-red-400 text-red-700';
+                    paymentStatus.textContent = 'An error occurred. Please try again.';
+                    paymentStatus.classList.remove('hidden');
+                } finally {
+                    payButton.disabled = false;
+                    payButton.innerHTML = originalButtonText;
+                }
+            });
+        });
+        
+        // Check payment status
+        async function checkPaymentStatus(checkoutRequestId) {
+            const paymentStatus = document.getElementById('paymentStatus');
+            let attempts = 0;
+            const maxAttempts = 20; // Check for 40 seconds (20 * 2 seconds)
+            
+            const checkInterval = setInterval(async () => {
+                attempts++;
+                
+                try {
+                    const response = await fetch(`check_payment.php?checkout_request_id=${checkoutRequestId}`);
+                    const data = await response.json();
+                    
+                    if (data.status === 'completed') {
+                        clearInterval(checkInterval);
+                        paymentStatus.className = 'mt-4 p-3 rounded-md bg-green-100 border border-green-400 text-green-700';
+                        paymentStatus.textContent = '✅ Payment successful! Provider has been notified. Closing...';
+                        
+                        setTimeout(() => {
+                            closeBookingModal();
+                            loadServices(); // Reload services
+                        }, 3000);
+                    } else if (data.status === 'failed') {
+                        clearInterval(checkInterval);
+                        paymentStatus.className = 'mt-4 p-3 rounded-md bg-red-100 border border-red-400 text-red-700';
+                        paymentStatus.textContent = '❌ Payment failed. Please try again.';
+                    } else if (attempts >= maxAttempts) {
+                        clearInterval(checkInterval);
+                        paymentStatus.className = 'mt-4 p-3 rounded-md bg-yellow-100 border border-yellow-400 text-yellow-700';
+                        paymentStatus.textContent = '⏱️ Payment verification timeout. Please contact support if payment was deducted.';
+                    }
+                } catch (error) {
+                    console.error('Payment status check error:', error);
+                }
+            }, 2000); // Check every 2 seconds
+        }
+    </script>
 </body>
 </html>
