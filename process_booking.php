@@ -4,6 +4,8 @@ header('Content-Type: application/json');
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
+require_once __DIR__ . '/MpesaAPI.php';
+
 // Database connection
 $conn = new mysqli('localhost', 'root', '', 'juakazi_db');
 
@@ -59,53 +61,66 @@ if (!$stmt->execute()) {
 $booking_id = $conn->insert_id;
 $stmt->close();
 
-// M-Pesa STK Push Integration
-// NOTE: For production, you need to register with Safaricom Daraja API
-// This is a simplified version for development
+// Initialize M-Pesa API
+$mpesa = new MpesaAPI();
 
-// M-Pesa API Credentials (SANDBOX - Replace with production credentials)
-$consumerKey = 'YOUR_CONSUMER_KEY'; // Get from Daraja
-$consumerSecret = 'YOUR_CONSUMER_SECRET'; // Get from Daraja
-$businessShortCode = '174379'; // Sandbox shortcode
-$passkey = 'YOUR_PASSKEY'; // Get from Daraja
-$callbackUrl = 'https://yourdomain.com/mpesa_callback.php';
+// Initiate STK Push
+$accountReference = 'Booking#' . $booking_id;
+$transactionDesc = 'JuaKazi Service Booking Fee';
 
-// For development/testing, simulate M-Pesa response
-$checkoutRequestId = 'ws_CO_' . time() . rand(1000, 9999);
-$merchantRequestId = 'mr_' . time() . rand(1000, 9999);
+$stkResponse = $mpesa->stkPush($customer_phone, $amount, $accountReference, $transactionDesc);
 
-// Update booking with M-Pesa details
-$stmt = $conn->prepare("UPDATE bookings SET checkout_request_id = ?, merchant_request_id = ? WHERE id = ?");
-$stmt->bind_param("ssi", $checkoutRequestId, $merchantRequestId, $booking_id);
-$stmt->execute();
-$stmt->close();
-
-// In production, you would make actual M-Pesa API call here
-// For now, we'll simulate the response
-
-// Simulate sending SMS to provider
-$providerMessage = "New Booking Alert!\n\n";
-$providerMessage .= "Service: " . $provider['service'] . "\n";
-$providerMessage .= "Customer Phone: " . $customer_phone . "\n";
-$providerMessage .= "Amount: KSh " . $amount . "\n";
-if (!empty($notes)) {
-    $providerMessage .= "Notes: " . $notes . "\n";
+if ($stkResponse['success']) {
+    // Update booking with M-Pesa details
+    $checkoutRequestId = $stkResponse['CheckoutRequestID'];
+    $merchantRequestId = $stkResponse['MerchantRequestID'];
+    
+    $stmt = $conn->prepare("UPDATE bookings SET checkout_request_id = ?, merchant_request_id = ? WHERE id = ?");
+    $stmt->bind_param("ssi", $checkoutRequestId, $merchantRequestId, $booking_id);
+    $stmt->execute();
+    $stmt->close();
+    
+    // Log notification for provider (in production, send actual SMS)
+    $providerMessage = "New Booking Alert!\n\n";
+    $providerMessage .= "Service: " . $provider['service'] . "\n";
+    $providerMessage .= "Customer Phone: " . $customer_phone . "\n";
+    $providerMessage .= "Amount: KSh " . $amount . "\n";
+    if (!empty($notes)) {
+        $providerMessage .= "Notes: " . $notes . "\n";
+    }
+    $providerMessage .= "\nBooking ID: #" . $booking_id;
+    
+    $logDir = __DIR__ . '/logs/notifications/';
+    if (!file_exists($logDir)) {
+        mkdir($logDir, 0755, true);
+    }
+    
+    file_put_contents($logDir . 'booking_notifications.log', 
+        date('Y-m-d H:i:s') . " - Provider: " . $provider['username'] . " (" . $provider['phone'] . ")\n" . $providerMessage . "\n\n", 
+        FILE_APPEND
+    );
+    
+    $conn->close();
+    
+    // Return success response
+    echo json_encode([
+        'success' => true,
+        'message' => 'M-Pesa prompt sent! Please enter your PIN on your phone.',
+        'checkout_request_id' => $checkoutRequestId,
+        'booking_id' => $booking_id
+    ]);
+} else {
+    // STK Push failed, update booking status
+    $stmt = $conn->prepare("UPDATE bookings SET payment_status = 'failed' WHERE id = ?");
+    $stmt->bind_param("i", $booking_id);
+    $stmt->execute();
+    $stmt->close();
+    
+    $conn->close();
+    
+    echo json_encode([
+        'success' => false,
+        'message' => $stkResponse['message'] ?? 'Failed to initiate M-Pesa payment'
+    ]);
 }
-$providerMessage .= "\nBooking ID: #" . $booking_id;
-
-// Log the notification (in production, send actual SMS)
-file_put_contents(__DIR__ . '/booking_notifications.log', 
-    date('Y-m-d H:i:s') . " - Provider: " . $provider['username'] . " (" . $provider['phone'] . ")\n" . $providerMessage . "\n\n", 
-    FILE_APPEND
-);
-
-$conn->close();
-
-// Return success response
-echo json_encode([
-    'success' => true,
-    'message' => 'M-Pesa prompt sent! Please enter your PIN on your phone.',
-    'checkout_request_id' => $checkoutRequestId,
-    'booking_id' => $booking_id
-]);
 ?>
