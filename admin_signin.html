@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Sign In - JuaKazi</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body class="min-h-screen bg-gradient-to-br from-blue-900 via-blue-800 to-blue-600 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+  <div class="sm:mx-auto sm:w-full sm:max-w-md">
+    <div class="flex justify-center">
+      <div class="bg-white rounded-full p-4 shadow-lg">
+        <i class="fas fa-user-shield text-4xl text-blue-600"></i>
+      </div>
+    </div>
+    <h2 class="mt-6 text-center text-3xl font-extrabold text-white">
+      Admin Portal
+    </h2>
+    <p class="mt-2 text-center text-sm text-blue-100">
+      Secure administrator access only
+    </p>
+  </div>
+
+  <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
+    <div class="bg-white py-8 px-4 shadow-2xl sm:rounded-lg sm:px-10">
+        <!-- Security Badge -->
+        <div class="flex items-center justify-center space-x-2 text-sm text-gray-600 bg-green-50 border border-green-200 rounded-md p-3 mb-6">
+          <i class="fas fa-shield-alt text-green-600"></i>
+          <span class="font-medium">Secure Admin Login - Protected Access</span>
+        </div>
+
+        <form class="space-y-6" action="http://localhost:5000/api/signin" method="POST" id="adminLoginForm">
+        <div>
+          <label for="email" class="block text-sm font-medium text-gray-700">
+            <i class="fas fa-envelope mr-1"></i> Admin Email
+          </label>
+          <div class="mt-1">
+            <input id="email" name="email" type="email" required
+              class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md 
+              placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+              placeholder="admin@juakazi.co.ke">
+          </div>
+        </div>
+
+        <div>
+          <label for="password" class="block text-sm font-medium text-gray-700">
+            <i class="fas fa-lock mr-1"></i> Password
+          </label>
+          <div class="mt-1">
+            <input id="password" name="password" type="password" required
+              class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md 
+              placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+              placeholder="Enter admin password">
+          </div>
+        </div>
+
+        <div>
+          <button type="submit"
+            class="w-full flex justify-center items-center py-3 px-4 border border-transparent 
+            text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 
+            focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition">
+            <i class="fas fa-sign-in-alt mr-2"></i>
+            Sign in to Admin Panel
+          </button>
+        </div>
+      </form>
+
+      <div class="mt-6">
+        <div class="relative">
+          <div class="absolute inset-0 flex items-center">
+            <div class="w-full border-t border-gray-300"></div>
+          </div>
+          <div class="relative flex justify-center text-sm">
+            <span class="px-2 bg-white text-gray-500">
+              <i class="fas fa-info-circle"></i> Admin access only
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-6 text-center">
+        <a href="index.html" class="text-sm text-blue-600 hover:text-blue-500">
+          <i class="fas fa-arrow-left mr-1"></i> Back to main site
+        </a>
+      </div>
+    </div>
+
+    <!-- Security Notice -->
+    <div class="mt-6 bg-blue-900 bg-opacity-50 rounded-lg p-4 text-center">
+      <p class="text-xs text-blue-100">
+        <i class="fas fa-lock mr-1"></i>
+        This area is restricted to authorized administrators only. 
+        All login attempts are monitored and logged.
+      </p>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('adminLoginForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+
+      try {
+        const email = document.getElementById('email').value.trim();
+        const password = document.getElementById('password').value;
+
+        const response = await fetch('http://localhost:5000/api/signin', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password })
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          alert(data.message || 'Login failed. Please try again.');
+          return;
+        }
+
+        if (!data.user || data.user.role !== 'admin') {
+          alert('Admin access required.');
+          return;
+        }
+
+        localStorage.setItem('juakazi_token', data.token);
+        localStorage.setItem('juakazi_user', JSON.stringify(data.user));
+        window.location.href = 'admin-dashboard.html';
+      } catch (error) {
+        console.error('Error:', error);
+        alert('An error occurred. Please try again.');
+      }
+    });
+  </script>
+</body>
+</html>

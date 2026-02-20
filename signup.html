@@ -1,35 +1,43 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Sign Up - JuaKazi</title>
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css">
 </head>
+
 <body class="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+
+  <!-- Header -->
   <div class="sm:mx-auto sm:w-full sm:max-w-md">
     <a href="index.html" class="flex justify-center">
-      <span class="text-3xl font-bold text-blue-600">JUAKAZI</span>
+      <span class="text-3xl font-bold text-blue-600">JuaKazi</span>
     </a>
     <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">
       Create your account
     </h2>
     <p class="mt-2 text-center text-sm text-gray-600">
-      Already have an account?
+      Or
       <a href="signin.html" class="font-medium text-blue-600 hover:text-blue-500">
-        Sign in here
+        sign in to your account
       </a>
     </p>
   </div>
 
+  <!-- Signup Form -->
   <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
     <div class="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
-      <div id="error-message" class="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded hidden"></div>
 
-      <!-- ✅ Only ONE form -->
-       <form method="post" action="register.php">
+      <form class="space-y-6" id="signupForm">
 
+        <!-- Security Badge -->
+        <div class="flex items-center justify-center space-x-2 text-sm text-gray-600 bg-green-50 border border-green-200 rounded-md p-2">
+          <svg class="w-4 h-4 text-green-600" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"/>
+          </svg>
+          <span class="font-medium">Secure Signup - Your data is protected</span>
+        </div>
 
         <!-- Username -->
         <div>
@@ -37,8 +45,8 @@
           <div class="mt-1">
             <input id="username" name="username" type="text" required
               class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md 
-                     placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-              placeholder="Enter your username" />
+              placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+              placeholder="Choose a username">
           </div>
         </div>
 
@@ -48,89 +56,64 @@
           <div class="mt-1">
             <input id="email" name="email" type="email" required
               class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md 
-                     placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-              placeholder="Enter your email" />
+              placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+              placeholder="Enter your email">
           </div>
         </div>
 
-        <!-- Account Type -->
+        <!-- Role -->
         <div>
-          <label for="role" class="block text-sm font-medium text-gray-700">Account Type</label>
+          <label for="role" class="block text-sm font-medium text-gray-700">I am a</label>
           <div class="mt-1">
-            <select id="role" name="role"
+            <select id="role" name="role" required
               class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md 
-                     placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-              onchange="toggleProviderOptions()">
-              <option value="">-- Select Account Type --</option>
-              <option value="customer">Customer - Find services</option>
-              <option value="provider">Provider - Offer services</option>
+              placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+              <option value="">Select role</option>
+              <option value="customer">Customer</option>
+              <option value="provider">Provider</option>
             </select>
           </div>
         </div>
 
-        <!-- Provider Services -->
-        <div id="providerOptions" class="mt-4 hidden">
-          <label for="service" class="block text-sm font-medium text-gray-700">Service Type</label>
-          <div class="mt-1">
-            <select id="service" name="service"
-              class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md 
-                     placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500">
-              <option value="">-- Select Service --</option>
-              <option value="Plumbing">Plumbing</option>
-              <option value="Hairdressing">Hairdressing</option>
-              <option value="Gardening">Gardening</option>
-              <option value="Carpentry">Carpentry</option>
-              <option value="Electrical">Electrical</option>
-              <option value="Painting">Painting</option>
-              <option value="Home Cleaning">Home Cleaning</option>
-              <option value="Tutoring">Tutoring</option>
-              <option value="Pet Care">Pet Care</option>
-              <option value="Beauty">Beauty</option>
-              <option value="Fitness">Fitness</option>
-            </select>
-          </div>
-
-          <!-- Phone Number -->
-          <div class="mt-4">
-            <label for="phone" class="block text-sm font-medium text-gray-700">Phone Number</label>
+        <!-- Provider Fields -->
+        <div id="providerFields" class="space-y-6 hidden">
+          <div>
+            <label for="service" class="block text-sm font-medium text-gray-700">Service</label>
             <div class="mt-1">
-              <input id="phone" name="phone" type="tel" 
+              <input id="service" name="service" type="text"
                 class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md 
-                       placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                placeholder="e.g., +254712345678" />
+                placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                placeholder="e.g., Plumbing, Cleaning">
             </div>
           </div>
 
-          <!-- Location -->
-          <div class="mt-4">
+          <div>
+            <label for="phone" class="block text-sm font-medium text-gray-700">Phone</label>
+            <div class="mt-1">
+              <input id="phone" name="phone" type="text"
+                class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md 
+                placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                placeholder="Your phone number">
+            </div>
+          </div>
+
+          <div>
             <label for="location" class="block text-sm font-medium text-gray-700">Location</label>
             <div class="mt-1">
-              <input id="location" name="location" type="text" 
+              <input id="location" name="location" type="text"
                 class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md 
-                       placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                placeholder="e.g., Nairobi, Kenya" />
+                placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                placeholder="Your city or area">
             </div>
           </div>
 
-          <!-- About -->
-          <div class="mt-4">
-            <label for="about" class="block text-sm font-medium text-gray-700">About Your Service</label>
+          <div>
+            <label for="about" class="block text-sm font-medium text-gray-700">About</label>
             <div class="mt-1">
               <textarea id="about" name="about" rows="3"
                 class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md 
-                       placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                placeholder="Describe your experience and services..."></textarea>
-            </div>
-          </div>
-
-          <!-- Profile Image -->
-          <div class="mt-4">
-            <label for="profile_image" class="block text-sm font-medium text-gray-700">Profile Image (Optional)</label>
-            <div class="mt-1">
-              <input id="profile_image" name="profile_image" type="file" accept="image/*"
-                class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md 
-                       focus:outline-none focus:ring-blue-500 focus:border-blue-500" />
-              <p class="mt-1 text-xs text-gray-500">Upload a profile picture (JPG, PNG, max 2MB)</p>
+                placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                placeholder="Tell clients about your services"></textarea>
             </div>
           </div>
         </div>
@@ -139,204 +122,84 @@
         <div>
           <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
           <div class="mt-1 relative">
-            <input id="password" name="password" type="password" required minlength="8"
-                   pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
-                   title="Must contain at least one number, one uppercase and lowercase letter, and at least 8 or more characters"
-                   class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md 
-                          placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 pr-10"
-                   placeholder="Enter your password" />
-            <button type="button" 
-                    class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600"
-                    onclick="togglePasswordVisibility('password')">
-              <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
-              </svg>
-            </button>
-          </div>
-          <p class="mt-1 text-xs text-gray-500">
-            Password must be at least 8 characters long and include:
-            <ul class="list-disc pl-5 mt-1">
-              <li>One uppercase letter</li>
-              <li>One lowercase letter</li>
-              <li>One number</li>
-            </ul>
-          </p>
-        </div>
-
-        <!-- Confirm Password -->
-        <div>
-          <label for="confirmPassword" class="block text-sm font-medium text-gray-700">Confirm Password</label>
-          <div class="mt-1 relative">
-            <input id="confirmPassword" name="confirmPassword" type="password" required
+            <input id="password" name="password" type="password" required
               class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md 
-                     placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 pr-10"
-              placeholder="Confirm your password" />
-            <button type="button" 
-                    class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600"
-                    onclick="togglePasswordVisibility('confirmPassword')">
-              <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
-              </svg>
-            </button>
+              placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+              placeholder="Create a password">
+            <button type="button" id="togglePassword" class="absolute inset-y-0 right-0 px-3 text-gray-500 focus:outline-none">ðŸ‘</button>
           </div>
         </div>
 
-        <!-- Submit -->
+        <!-- Error message placeholder -->
+        <div id="errorMessage" class="hidden text-red-600 text-sm text-center"></div>
+
+        <!-- Submit Button -->
         <div>
-          <button type="submit" id="submit-btn"
-            class="group relative w-full flex justify-center py-2 px-4 border border-transparent 
-                   text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 
-                   focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
-            Create Account
+          <button type="submit"
+            class="w-full flex justify-center py-2 px-4 border border-transparent 
+            text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 
+            focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+            Create account
           </button>
         </div>
+
       </form>
-    </div>
-    <div class="mt-4 text-center">
-      <a href="services.html" class="text-blue-600 hover:underline font-medium">View Available Services</a>
     </div>
   </div>
 
-  <!-- JS -->
+  <!-- Scripts -->
   <script>
-    function togglePasswordVisibility(fieldId) {
-      const field = document.getElementById(fieldId);
-      const button = field.nextElementSibling;
-      const icon = button.querySelector('svg');
-      
-      if (field.type === 'password') {
-        field.type = 'text';
-        icon.innerHTML = `
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"></path>
-        `;
-      } else {
-        field.type = 'password';
-        icon.innerHTML = `
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
-        `;
-      }
-    }
-    function toggleProviderOptions() {
-      const roleSelect = document.getElementById('role');
-      const providerOptions = document.getElementById('providerOptions');
-      const serviceSelect = document.getElementById('service');
-      const phoneInput = document.getElementById('phone');
-      const locationInput = document.getElementById('location');
-      const aboutInput = document.getElementById('about');
-      
-      if (roleSelect.value === 'provider') {
-        providerOptions.classList.remove('hidden');
-        serviceSelect.required = true;
-        phoneInput.required = true;
-        locationInput.required = true;
-        aboutInput.required = true;
-      } else {
-        providerOptions.classList.add('hidden');
-        serviceSelect.required = false;
-        phoneInput.required = false;
-        locationInput.required = false;
-        aboutInput.required = false;
-        serviceSelect.value = '';
-        phoneInput.value = '';
-        locationInput.value = '';
-        aboutInput.value = '';
-      }
+    const roleSelect = document.getElementById('role');
+    const providerFields = document.getElementById('providerFields');
+
+    roleSelect.addEventListener('change', () => {
+      providerFields.classList.toggle('hidden', roleSelect.value !== 'provider');
+    });
+
+    // Password toggle
+    document.getElementById('togglePassword').addEventListener('click', function() {
+      const pwd = document.getElementById('password');
+      pwd.type = pwd.type === 'password' ? 'text' : 'password';
+    });
+
+    function showError(message) {
+      const errorDiv = document.getElementById('errorMessage');
+      errorDiv.textContent = message;
+      errorDiv.classList.remove('hidden');
     }
 
-    // Handle form submission
-    document.addEventListener('DOMContentLoaded', function() {
-      const form = document.querySelector('form');
-      const errorMessage = document.getElementById('error-message');
-      
-      form.addEventListener('submit', async function(e) {
-        e.preventDefault();
-        
-        // Show loading state
-        const submitButton = form.querySelector('button[type="submit"]');
-        const originalButtonText = submitButton.innerHTML;
-        submitButton.disabled = true;
-        submitButton.innerHTML = 'Creating Account...';
-        
-        // Clear previous errors
-        errorMessage.classList.add('hidden');
-        errorMessage.innerHTML = '';
-        errorMessage.classList.remove('bg-green-100', 'border-green-400', 'text-green-700');
-        errorMessage.classList.add('bg-red-100', 'border-red-400', 'text-red-700');
-        
-        try {
-          // Get form data
-          const formData = new FormData(form);
-          
-          // Send AJAX request
-          const response = await fetch('register.php', {
-            method: 'POST',
-            body: formData,
-            headers: {
-              'Accept': 'application/json'
-            }
-          });
-          
-          // Parse JSON response
-          const data = await response.json();
-          
-          if (!response.ok) {
-            throw new Error(data.message || 'Server error');
-          }
-          
-          if (data.success) {
-            // Show success message
-            errorMessage.textContent = data.message || 'Registration successful! Redirecting...';
-            errorMessage.classList.remove('bg-red-100', 'border-red-400', 'text-red-700');
-            errorMessage.classList.add('bg-green-100', 'border-green-400', 'text-green-700');
-            errorMessage.classList.remove('hidden');
-            
-            console.log('Registration successful:', data);
-            
-            // Redirect after a short delay
-            if (data.redirect) {
-              setTimeout(() => {
-                window.location.href = data.redirect;
-              }, 1500);
-            }
-          } else {
-            // Show error message
-            let errorMsg = data.message || 'An error occurred. Please try again.';
-            
-            // Add validation errors if they exist
-            if (data.errors && Array.isArray(data.errors)) {
-              errorMsg += '<br><br>' + data.errors.map(error => `• ${error}`).join('<br>');
-            }
-            
-            errorMessage.innerHTML = errorMsg;
-            errorMessage.classList.remove('hidden');
-          }
-        } catch (error) {
-          console.error('Registration error:', error);
-          let errorMsg = 'An error occurred while processing your request. ';
-          
-          // Add debug info if available
-          if (error.response) {
-            console.error('Response status:', error.response.status);
-            console.error('Response data:', error.response.data);
-          }
-          
-          errorMessage.textContent = errorMsg + (data?.debug ? ' (' + data.debug + ')' : '');
-          errorMessage.classList.remove('hidden');
-        } finally {
-          // Reset button state
-          submitButton.disabled = false;
-          submitButton.innerHTML = originalButtonText;
-          
-          // Scroll to error message if it's visible
-          if (!errorMessage.classList.contains('hidden')) {
-            errorMessage.scrollIntoView({ behavior: 'smooth', block: 'center' });
-          }
+    document.getElementById("signupForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const data = {
+        username: document.getElementById("username").value,
+        email: document.getElementById("email").value,
+        password: document.getElementById("password").value,
+        role: document.getElementById("role").value,
+        service: document.getElementById("service").value,
+        phone: document.getElementById("phone").value,
+        location: document.getElementById("location").value,
+        about: document.getElementById("about").value
+      };
+
+      try {
+        const res = await fetch("http://localhost:5000/api/signup", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data)
+        });
+
+        const result = await res.json();
+        if (!res.ok) {
+          showError(result.message || "Signup failed");
+          return;
         }
-      });
+        alert(result.message);
+      } catch (err) {
+        showError("Signup failed. Please try again.");
+      }
     });
   </script>
+
 </body>
 </html>

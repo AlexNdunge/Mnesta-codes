@@ -137,52 +137,101 @@
     </main>
   </div>
 
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script>
-    // Example data for demonstration
-    const users = [
-      { name: 'Jane Doe', email: 'jane@example.com', role: 'Provider', joined: '2025-09-01' },
-      { name: 'John Smith', email: 'john@example.com', role: 'Customer', joined: '2025-08-28' },
-      { name: 'Mary Wanjiku', email: 'mary@example.com', role: 'Provider', joined: '2025-08-25' },
-      { name: 'Ali Hassan', email: 'ali@example.com', role: 'Customer', joined: '2025-08-20' },
-    ];
-    const messages = [
-      { from: 'Jane Doe', message: 'How do I update my profile?', date: '2025-09-07' },
-      { from: 'John Smith', message: 'Can I book two services at once?', date: '2025-09-06' },
-      { from: 'Mary Wanjiku', message: 'Payment not going through.', date: '2025-09-05' },
-    ];
+    const usersTbody = document.getElementById('recent-users');
+    const messagesTbody = document.getElementById('recent-messages');
+    async function fetchUsers(search = "") {
+      const url = new URL("http://localhost:5000/api/admin/users");
+      if (search) url.searchParams.set("search", search);
 
-    // Populate recent users with Edit/Delete
-    function renderUsers(filter = "") {
+      const res = await fetch(url.toString(), {
+        credentials: "include"
+      });
+
+      const data = await res.json();
+      if (!res.ok) {
+        if (res.status === 401 || res.status === 403) {
+          alert("Admin login required.");
+          window.location.href = "signin.html";
+          return [];
+        }
+        throw new Error(data.message || "Failed to load users");
+      }
+      return data;
+    }
+
+    function updateStats(users) {
+      const totalUsers = users.length;
+      const totalProviders = users.filter(u => u.role === "provider" && u.service).length;
+      const totalAdmins = users.filter(u => u.role === "admin").length;
+      document.getElementById("total-users").textContent = totalUsers;
+      document.getElementById("total-services").textContent = totalProviders;
+      document.getElementById("total-admins").textContent = totalAdmins;
+    }
+
+    function renderUsers(users) {
       usersTbody.innerHTML = "";
-      users.filter(u =>
-        u.name.toLowerCase().includes(filter.toLowerCase()) ||
-        u.email.toLowerCase().includes(filter.toLowerCase())
-      ).forEach(u => {
+      users.forEach(u => {
         const tr = document.createElement('tr');
-        tr.innerHTML = `<td class="px-4 py-2">${u.name}</td><td class="px-4 py-2">${u.email}</td><td class="px-4 py-2">${u.role}</td><td class="px-4 py-2">${u.joined}</td><td class="px-4 py-2 text-center"><button class='edit-btn action-btn bg-yellow-400 text-white rounded px-3 py-1 mr-2 hover:bg-yellow-500'>Edit</button><button class='delete-btn action-btn bg-red-500 text-white rounded px-3 py-1 hover:bg-red-600'>Delete</button></td>`;
-        // Edit button (demo)
-        tr.querySelector('.edit-btn').onclick = () => alert('Edit user: ' + u.name);
-        // Delete button (demo)
+        tr.innerHTML =
+          `<td class="px-4 py-2">${u.username}</td>` +
+          `<td class="px-4 py-2">${u.email}</td>` +
+          `<td class="px-4 py-2">${u.role}</td>` +
+          `<td class="px-4 py-2">N/A</td>` +
+          `<td class="px-4 py-2 text-center">` +
+          `<button class='edit-btn action-btn bg-yellow-400 text-white rounded px-3 py-1 mr-2 hover:bg-yellow-500'>Edit</button>` +
+          `<button class='delete-btn action-btn bg-red-500 text-white rounded px-3 py-1 hover:bg-red-600'>Delete</button>` +
+          `</td>`;
+        tr.querySelector('.edit-btn').onclick = () => alert('Edit user: ' + u.username);
         tr.querySelector('.delete-btn').onclick = () => {
-          if (confirm('Are you sure you want to delete ' + u.name + '?')) {
+          if (confirm('Are you sure you want to delete ' + u.username + '?')) {
             usersTbody.removeChild(tr);
           }
         };
         usersTbody.appendChild(tr);
       });
     }
-    renderUsers();
-    // Search functionality
-    document.getElementById('search-form').onsubmit = function(e) {
+
+    async function loadUsers(search = "") {
+      const users = await fetchUsers(search);
+      updateStats(users);
+      renderUsers(users);
+    }
+
+    document.getElementById('search-form').onsubmit = async function(e) {
       e.preventDefault();
-      renderUsers(document.getElementById('search-user').value);
+      await loadUsers(document.getElementById('search-user').value);
     };
+
     // Graphs (Chart.js)
+    function getLastMonths(count) {
+      const months = [];
+      const now = new Date();
+      for (let i = count - 1; i >= 0; i -= 1) {
+        const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+        const year = d.getFullYear();
+        const monthIndex = d.getMonth();
+        const monthNum = String(monthIndex + 1).padStart(2, '0');
+        const short = d.toLocaleString('en-US', { month: 'short' });
+        months.push({
+          ym: `${year}-${monthNum}`,
+          label: `${short} ${year}`
+        });
+      }
+      return months;
+    }
+
+    const lastSixMonths = getLastMonths(6);
+    const regLabels = lastSixMonths.map(m => m.ym);
+    const trafficLabels = lastSixMonths.map(m => m.label);
+
     const regCtx = document.getElementById('regChart').getContext('2d');
     new Chart(regCtx, {
       type: 'line',
       data: {
-        labels: ['2025-04', '2025-05', '2025-06', '2025-07', '2025-08', '2025-09'],
+        labels: regLabels,
         datasets: [{
           label: 'Registrations',
           data: [20, 35, 50, 40, 60, 45],
@@ -199,7 +248,7 @@
     new Chart(trafficCtx, {
       type: 'bar',
       data: {
-        labels: ['Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep'],
+        labels: trafficLabels,
         datasets: [{
           label: 'Visits',
           data: [120, 150, 180, 140, 200, 170],
@@ -211,15 +260,19 @@
       options: { plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } }
     });
 
-    // Populate recent messages
-    const messagesTbody = document.getElementById('recent-messages');
+    // Populate recent messages (demo)
+    const messages = [
+      { from: 'Jane Doe', message: 'How do I update my profile?', date: '2025-09-07' },
+      { from: 'John Smith', message: 'Can I book two services at once?', date: '2025-09-06' },
+      { from: 'Mary Wanjiku', message: 'Payment not going through.', date: '2025-09-05' },
+    ];
     messages.forEach(m => {
       const tr = document.createElement('tr');
       tr.innerHTML = `<td class="px-4 py-2">${m.from}</td><td class="px-4 py-2">${m.message}</td><td class="px-4 py-2">${m.date}</td>`;
       messagesTbody.appendChild(tr);
     });
+
+    loadUsers();
   </script>
-  <!-- Chart.js CDN -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </body>
 </html>

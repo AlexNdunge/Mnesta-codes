@@ -6,7 +6,10 @@
   <title>Sign In - JuaKazi</title>
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>
+
 <body class="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+
+  <!-- Header -->
   <div class="sm:mx-auto sm:w-full sm:max-w-md">
     <a href="index.html" class="flex justify-center">
       <span class="text-3xl font-bold text-blue-600">JuaKazi</span>
@@ -22,9 +25,11 @@
     </p>
   </div>
 
+  <!-- Login Form -->
   <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
     <div class="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
-        <form class="space-y-6" action="login.php" method="POST" id="loginForm">
+
+      <form class="space-y-6" id="loginForm">
 
         <!-- Security Badge -->
         <div class="flex items-center justify-center space-x-2 text-sm text-gray-600 bg-green-50 border border-green-200 rounded-md p-2">
@@ -33,7 +38,8 @@
           </svg>
           <span class="font-medium">Secure Login - Your data is encrypted</span>
         </div>
-     
+
+        <!-- Email -->
         <div>
           <label for="email" class="block text-sm font-medium text-gray-700">Email address</label>
           <div class="mt-1">
@@ -44,19 +50,29 @@
           </div>
         </div>
 
+        <!-- Password -->
         <div>
           <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
-          <div class="mt-1">
+          <div class="mt-1 relative">
             <input id="password" name="password" type="password" required
               class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md 
               placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
               placeholder="Enter your password">
+            <button type="button" id="togglePassword" class="absolute inset-y-0 right-0 px-3 text-gray-500 focus:outline-none">👁</button>
+          </div>
+
+          <!-- Forgot Password -->
+          <div class="text-sm text-right mt-2">
+            <a href="forgot_password.html" class="font-medium text-blue-600 hover:text-blue-500">
+              Forgot your password?
+            </a>
           </div>
         </div>
 
-        <!-- CSRF Token (will be populated by JavaScript) -->
-        <input type="hidden" name="csrf_token" id="csrf_token">
+        <!-- Error message placeholder -->
+        <div id="errorMessage" class="hidden text-red-600 text-sm text-center"></div>
 
+        <!-- Submit Button -->
         <div>
           <button type="submit"
             class="w-full flex justify-center py-2 px-4 border border-transparent 
@@ -65,32 +81,56 @@
             Sign in
           </button>
         </div>
+
       </form>
     </div>
   </div>
 
+  <!-- Scripts -->
   <script>
-    // Fetch CSRF token before form submission
-    document.getElementById('loginForm').addEventListener('submit', async function(e) {
+    // Password toggle
+    document.getElementById('togglePassword').addEventListener('click', function() {
+      const pwd = document.getElementById('password');
+      pwd.type = pwd.type === 'password' ? 'text' : 'password';
+    });
+
+    // Error message handler (optional)
+    function showError(message) {
+      const errorDiv = document.getElementById('errorMessage');
+      errorDiv.textContent = message;
+      errorDiv.classList.remove('hidden');
+    }
+
+    document.getElementById("loginForm").addEventListener("submit", async (e) => {
       e.preventDefault();
-      
+      const payload = {
+        email: document.getElementById("email").value,
+        password: document.getElementById("password").value
+      };
+
       try {
-        // Get CSRF token
-        const response = await fetch('get_csrf_token.php');
-        const data = await response.json();
-        
-        if (data.token) {
-          document.getElementById('csrf_token').value = data.token;
-          // Submit form
-          e.target.submit();
-        } else {
-          alert('Security validation failed. Please refresh the page.');
+        const res = await fetch("http://localhost:5000/api/signin", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+          credentials: "include"
+        });
+        const data = await res.json();
+        if (!res.ok) {
+          showError(data.message || "Login failed");
+          return;
         }
-      } catch (error) {
-        console.error('Error:', error);
-        alert('An error occurred. Please try again.');
+        if (data.user && data.user.username) {
+          alert(`Welcome, ${data.user.username}!`);
+        } else {
+          alert("Welcome!");
+        }
+        window.location.href = "services.html";
+      } catch (err) {
+        showError("Login failed. Please try again.");
       }
     });
   </script>
+
 </body>
 </html>
