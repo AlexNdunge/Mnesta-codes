@@ -69,7 +69,7 @@
               class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md 
               placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500">
               <option value="">Select role</option>
-              <option value="customer">Customer</option>
+              <option value="client">Customer</option>
               <option value="provider">Provider</option>
             </select>
           </div>
@@ -194,7 +194,14 @@
           showError(result.message || "Signup failed");
           return;
         }
-        alert(result.message);
+        if (result.user && result.user.role === "provider") {
+          alert("Account created successfully. Your provider profile is now visible on Services.");
+          window.location.href = "services.html";
+          return;
+        }
+
+        alert("Account created successfully. Note: only Provider accounts are listed on Services.");
+        window.location.href = "signin.html";
       } catch (err) {
         showError("Signup failed. Please try again.");
       }

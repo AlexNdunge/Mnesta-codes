@@ -132,13 +132,17 @@
   <!-- Scripts -->
   <script>
   document.addEventListener('DOMContentLoaded', function() {
+    const API_BASE = "http://localhost:5000";
     const logoutBtn = document.getElementById("logoutBtn");
     const signinLink = document.getElementById("signinLink");
     const signupLink = document.getElementById("signupLink");
+    const bookingForm = document.getElementById("bookingForm");
+    const paymentStatus = document.getElementById("paymentStatus");
+    const payButton = document.getElementById("payButton");
 
     async function setAuthState() {
       try {
-        const res = await fetch("http://localhost:5000/api/me", {
+        const res = await fetch(`${API_BASE}/api/me`, {
           credentials: "include"
         });
         if (!res.ok) throw new Error("Not authenticated");
@@ -156,7 +160,7 @@
 
     logoutBtn.addEventListener("click", async () => {
       try {
-        await fetch("http://localhost:5000/api/logout", {
+        await fetch(`${API_BASE}/api/logout`, {
           method: "POST",
           credentials: "include"
         });
@@ -177,10 +181,17 @@
       showLoading(true);
       try {
         const query = searchInput.value.trim();
-        const url = new URL("http://localhost:5000/api/users");
+        const url = new URL(`${API_BASE}/api/users`);
         if (query) url.searchParams.set("search", query);
         const res = await fetch(url.toString());
-        if(!res.ok) throw new Error("Failed to fetch services");
+        if(!res.ok) {
+          let message = "Failed to fetch services";
+          try {
+            const body = await res.json();
+            if (body && body.message) message = body.message;
+          } catch (_) {}
+          throw new Error(message);
+        }
 
         let providers = await res.json();
 
@@ -188,7 +199,7 @@
 
       } catch(err) {
         console.error(err);
-        showError("Failed to load services. Please try again later.");
+        showError(err.message || "Failed to load services. Please try again later.");
       } finally {
         showLoading(false);
       }
@@ -232,6 +243,48 @@
     function showLoading(show) { loadingElement.classList.toggle('hidden', !show); }
     function showError(msg) { noResultsElement.textContent = msg; noResultsElement.classList.remove('hidden'); }
     function debounce(fn, delay) { let t; return (...args) => { clearTimeout(t); t = setTimeout(() => fn.apply(this,args), delay); }; }
+
+    bookingForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const payload = {
+        provider_id: document.getElementById("providerId").value,
+        customer_phone: document.getElementById("customerPhone").value.trim(),
+        notes: document.getElementById("bookingNotes").value.trim()
+      };
+
+      paymentStatus.classList.add("hidden");
+      payButton.disabled = true;
+      payButton.textContent = "Processing...";
+
+      try {
+        const res = await fetch(`${API_BASE}/api/bookings`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",
+          body: JSON.stringify(payload)
+        });
+
+        const data = await res.json();
+        if (!res.ok) {
+          paymentStatus.className = "mt-4 p-3 rounded-md bg-red-100 text-red-800";
+          paymentStatus.textContent = data.message || "Booking failed. Please try again.";
+          paymentStatus.classList.remove("hidden");
+          return;
+        }
+
+        paymentStatus.className = "mt-4 p-3 rounded-md bg-green-100 text-green-800";
+        paymentStatus.textContent = `Booking #${data.booking.id} created. Payment status: ${data.payment.payment_status}.`;
+        paymentStatus.classList.remove("hidden");
+      } catch (err) {
+        paymentStatus.className = "mt-4 p-3 rounded-md bg-red-100 text-red-800";
+        paymentStatus.textContent = "Network error. Please try again.";
+        paymentStatus.classList.remove("hidden");
+      } finally {
+        payButton.disabled = false;
+        payButton.textContent = "Pay with M-Pesa";
+      }
+    });
   });
 
   function openBookingModal(providerId, providerName, serviceName) {
