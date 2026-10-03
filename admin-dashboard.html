@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard - JuaKazi</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    :root {
+      --navy: rgb(1, 59, 99);
+      --sky: rgb(168, 218, 240);
+    }
+    body { background: #f7fafc; }
+    .stat-card { border-left: 4px solid var(--navy); }
+    .stat-card.amber { border-left-color: #d97706; }
+    .stat-card.blue { border-left-color: #2563eb; }
+    .stat-card.navy { border-left-color: var(--navy); }
+    .filter-tab { transition: all .15s; }
+    .filter-tab.active { background: var(--navy); color: #fff; border-color: var(--navy); }
+    .modal-overlay { transition: opacity .2s; }
+    .modal-panel { transition: transform .2s; }
+    .toast { transition: all .3s; }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="bg-white shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center py-4">
+      <div class="flex items-center gap-2">
+        <i class="fas fa-user-shield text-xl" style="color: rgb(1,59,99);"></i>
+        <span class="text-xl font-bold text-gray-900">JuaKazi <span style="color: rgb(1,59,99);">Admin</span></span>
+      </div>
+      <div class="flex items-center gap-4">
+        <button id="notifBtn" class="relative w-10 h-10 rounded-full bg-blue-50 hover:bg-blue-100 flex items-center justify-center text-blue-700 transition">
+          <i class="fas fa-bell"></i>
+          <span id="notifBadge" class="hidden absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">0</span>
+        </button>
+        <span class="text-sm text-gray-500 hidden sm:inline">Signed in as <span class="font-medium text-gray-700">Admin</span></span>
+        <button id="logoutBtn" class="bg-red-600 hover:bg-red-700 text-white text-sm font-semibold px-4 py-2 rounded-md transition">
+          <i class="fas fa-sign-out-alt mr-1"></i> Logout
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <h1 class="text-2xl font-bold text-gray-900">Dashboard</h1>
+    <p class="text-gray-500 mt-1 mb-6">Bookings and users across the JuaKazi marketplace.</p>
+
+    <div id="dashboardAlert" class="hidden mb-6 rounded-lg border border-red-200 bg-red-50 text-red-700 text-sm px-4 py-3"></div>
+
+    <!-- Stats -->
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-10">
+      <div class="stat-card navy bg-white rounded-lg shadow-sm p-5">
+        <i class="fas fa-calendar-check text-2xl text-gray-200 float-right"></i>
+        <div class="text-3xl font-extrabold text-gray-900" id="stat-total-bookings">&mdash;</div>
+        <div class="text-sm text-gray-500 mt-1">Total Bookings</div>
+      </div>
+      <div class="stat-card amber bg-white rounded-lg shadow-sm p-5">
+        <i class="fas fa-hourglass-half text-2xl text-gray-200 float-right"></i>
+        <div class="text-3xl font-extrabold text-gray-900" id="stat-pending-bookings">&mdash;</div>
+        <div class="text-sm text-gray-500 mt-1">Pending Bookings</div>
+      </div>
+      <div class="stat-card blue bg-white rounded-lg shadow-sm p-5">
+        <i class="fas fa-check-circle text-2xl text-gray-200 float-right"></i>
+        <div class="text-3xl font-extrabold text-gray-900" id="stat-confirmed-bookings">&mdash;</div>
+        <div class="text-sm text-gray-500 mt-1">Confirmed Bookings</div>
+      </div>
+      <div class="stat-card bg-white rounded-lg shadow-sm p-5" style="border-left-color:#16a34a;">
+        <i class="fas fa-users text-2xl text-gray-200 float-right"></i>
+        <div class="text-3xl font-extrabold text-gray-900" id="stat-total-users">&mdash;</div>
+        <div class="text-sm text-gray-500 mt-1">Total Users</div>
+      </div>
+    </div>
+
+    <!-- Bookings -->
+    <div id="bookings-section">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
+        <h2 class="text-lg font-semibold text-gray-900"><i class="fas fa-calendar-alt text-blue-600 mr-2"></i>Bookings</h2>
+        <div id="filterTabs" class="flex flex-wrap gap-2">
+          <button data-status="all" class="filter-tab active text-xs font-semibold px-3 py-1.5 rounded-full border border-gray-300 bg-white text-gray-600">All</button>
+          <button data-status="pending" class="filter-tab text-xs font-semibold px-3 py-1.5 rounded-full border border-gray-300 bg-white text-gray-600">Pending</button>
+          <button data-status="confirmed" class="filter-tab text-xs font-semibold px-3 py-1.5 rounded-full border border-gray-300 bg-white text-gray-600">Confirmed</button>
+          <button data-status="in_progress" class="filter-tab text-xs font-semibold px-3 py-1.5 rounded-full border border-gray-300 bg-white text-gray-600">In Progress</button>
+          <button data-status="completed" class="filter-tab text-xs font-semibold px-3 py-1.5 rounded-full border border-gray-300 bg-white text-gray-600">Completed</button>
+          <button data-status="paid" class="filter-tab text-xs font-semibold px-3 py-1.5 rounded-full border border-gray-300 bg-white text-gray-600">Paid</button>
+          <button data-status="cancelled" class="filter-tab text-xs font-semibold px-3 py-1.5 rounded-full border border-gray-300 bg-white text-gray-600">Cancelled</button>
+        </div>
+      </div>
+
+      <div class="bg-white rounded-lg shadow-sm overflow-hidden">
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm">
+            <thead>
+              <tr class="bg-gray-50 text-left text-xs text-gray-500 uppercase tracking-wide">
+                <th class="px-4 py-3">Service</th>
+                <th class="px-4 py-3">Customer</th>
+                <th class="px-4 py-3 hidden md:table-cell">Provider</th>
+                <th class="px-4 py-3 hidden lg:table-cell">Phone</th>
+                <th class="px-4 py-3 hidden sm:table-cell">Fee</th>
+                <th class="px-4 py-3">Status</th>
+                <th class="px-4 py-3 hidden lg:table-cell">Booked</th>
+              </tr>
+            </thead>
+            <tbody id="bookingsBody" class="divide-y divide-gray-100">
+              <tr><td colspan="7" class="text-center py-10 text-gray-400"><i class="fas fa-spinner fa-spin mr-2"></i>Loading bookings&hellip;</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Users -->
+    <div id="users-section" class="mt-10">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
+        <h2 class="text-lg font-semibold text-gray-900"><i class="fas fa-users text-blue-600 mr-2"></i>Recent Users</h2>
+        <form id="userSearchForm" class="flex gap-2">
+          <input id="userSearchInput" type="text" placeholder="Search name, email, service..."
+            class="text-sm px-3 py-1.5 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 w-56">
+          <button type="submit" class="text-sm font-semibold px-3 py-1.5 rounded-md text-white" style="background: rgb(1,59,99);">Search</button>
+        </form>
+      </div>
+
+      <div class="bg-white rounded-lg shadow-sm overflow-hidden">
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm">
+            <thead>
+              <tr class="bg-gray-50 text-left text-xs text-gray-500 uppercase tracking-wide">
+                <th class="px-4 py-3">Name</th>
+                <th class="px-4 py-3 hidden sm:table-cell">Email</th>
+                <th class="px-4 py-3">Role</th>
+                <th class="px-4 py-3 hidden md:table-cell">Service / Location</th>
+                <th class="px-4 py-3 hidden lg:table-cell">Joined</th>
+              </tr>
+            </thead>
+            <tbody id="usersBody" class="divide-y divide-gray-100">
+              <tr><td colspan="5" class="text-center py-10 text-gray-400"><i class="fas fa-spinner fa-spin mr-2"></i>Loading users&hellip;</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <p id="usersMoreNote" class="hidden text-xs text-gray-400 mt-2"></p>
+    </div>
+  </div>
+
+  <!-- Booking Detail Modal -->
+  <div id="bookingModal" class="modal-overlay hidden fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50 p-4">
+    <div class="modal-panel bg-white rounded-lg shadow-xl max-w-lg w-full overflow-y-auto p-6 relative" style="max-height: 90vh;">
+      <button id="modalCloseBtn" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600"><i class="fas fa-times text-lg"></i></button>
+      <h3 class="text-xl font-bold text-gray-900" id="m-service">&mdash;</h3>
+      <p class="text-xs text-gray-400 mb-5" id="m-id">Booking ID: &mdash;</p>
+
+      <div class="grid grid-cols-2 gap-4 mb-5 text-sm">
+        <div><label class="block text-xs font-bold text-gray-400 uppercase mb-0.5">Customer</label><span id="m-customer" class="font-medium text-gray-800">&mdash;</span></div>
+        <div><label class="block text-xs font-bold text-gray-400 uppercase mb-0.5">Provider</label><span id="m-provider" class="font-medium text-gray-800">&mdash;</span></div>
+        <div><label class="block text-xs font-bold text-gray-400 uppercase mb-0.5">Phone (M-Pesa)</label><span id="m-phone" class="font-medium text-gray-800">&mdash;</span></div>
+        <div><label class="block text-xs font-bold text-gray-400 uppercase mb-0.5">Booking Fee</label><span id="m-fee" class="font-medium text-gray-800">&mdash;</span></div>
+        <div><label class="block text-xs font-bold text-gray-400 uppercase mb-0.5">Status</label><span id="m-status">&mdash;</span></div>
+        <div><label class="block text-xs font-bold text-gray-400 uppercase mb-0.5">Booked At</label><span id="m-created" class="font-medium text-gray-800">&mdash;</span></div>
+        <div class="col-span-2"><label class="block text-xs font-bold text-gray-400 uppercase mb-0.5">Notes</label>
+          <div id="m-notes" class="bg-gray-50 rounded-md px-3 py-2 text-gray-600" style="min-height: 2.5rem;">&mdash;</div>
+        </div>
+      </div>
+
+      <div id="modalError" class="hidden text-sm text-red-600 bg-red-50 border border-red-200 rounded-md px-3 py-2 mb-4"></div>
+
+      <div id="modalActions" class="flex flex-wrap gap-2"></div>
+    </div>
+  </div>
+
+  <!-- New booking toast -->
+  <div id="notifToast" class="toast fixed bottom-6 right-6 bg-white shadow-xl rounded-lg px-4 py-3 flex items-start gap-3 max-w-xs translate-y-24 opacity-0 pointer-events-none z-50 border border-gray-100">
+    <i class="fas fa-bell text-blue-600 mt-0.5"></i>
+    <div class="flex-1">
+      <div class="text-sm font-bold text-gray-900">New booking request</div>
+      <div class="text-xs text-gray-500 mt-0.5" id="notifToastSub">&mdash;</div>
+    </div>
+    <button id="notifToastClose" class="text-gray-300 hover:text-gray-500"><i class="fas fa-times"></i></button>
+  </div>
+
+  <script>
+    const API_BASE = '';
+    let allBookings = [];
+    let usersById = new Map();
+    let currentFilter = 'all';
+    let activeBookingId = null;
+    let usersTotal = 0;
+    let lastSeenBookingId = Number(localStorage.getItem('juakazi_admin_last_seen_booking_id') || 0);
+    let firstBookingsLoad = true;
+
+    const dashboardAlert = document.getElementById('dashboardAlert');
+    const bookingsBody = document.getElementById('bookingsBody');
+    const usersBody = document.getElementById('usersBody');
+
+    function esc(str) {
+      if (str == null) return '';
+      return String(str).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+    }
+
+    function showAlert(msg) {
+      dashboardAlert.textContent = msg;
+      dashboardAlert.classList.remove('hidden');
+    }
+
+    // ---------------------------------------------------------------------
+    // Auth
+    // ---------------------------------------------------------------------
+    async function checkAdminAccess() {
+      try {
+        const res = await fetch(`${API_BASE}/api/me`, { credentials: 'include' });
+        if (!res.ok) throw new Error('not authed');
+        const { user } = await res.json();
+        if (!user || user.role !== 'admin') throw new Error('not admin');
+        return true;
+      } catch {
+        window.location.href = 'admin_signin.html';
+        return false;
+      }
+    }
+
+    document.getElementById('logoutBtn').addEventListener('click', async () => {
+      try { await fetch(`${API_BASE}/api/logout`, { method: 'POST', credentials: 'include' }); } catch {}
+      window.location.href = 'admin_signin.html';
+    });
+
+    // ---------------------------------------------------------------------
+    // Data loading
+    // ---------------------------------------------------------------------
+    async function loadUsers(search = '') {
+      const url = new URL('/api/admin/users', window.location.origin);
+      url.searchParams.set('limit', '100');
+      if (search) url.searchParams.set('search', search);
+
+      const res = await fetch(url.toString(), { credentials: 'include' });
+      if (res.status === 401 || res.status === 403) { window.location.href = 'admin_signin.html'; return; }
+      if (!res.ok) throw new Error('Failed to load users');
+      const { users, total } = await res.json();
+
+      usersById = new Map(users.map(u => [String(u.id), u]));
+      usersTotal = total;
+      return users;
+    }
+
+    async function loadBookings() {
+      const res = await fetch(`${API_BASE}/api/bookings/me`, { credentials: 'include' });
+      if (res.status === 401 || res.status === 403) { window.location.href = 'admin_signin.html'; return; }
+      if (!res.ok) throw new Error('Failed to load bookings');
+      allBookings = await res.json();
+    }
+
+    // ---------------------------------------------------------------------
+    // Stats
+    // ---------------------------------------------------------------------
+    function renderStats() {
+      const pending = allBookings.filter(b => b.status === 'pending').length;
+      const confirmed = allBookings.filter(b => b.status === 'confirmed').length;
+      document.getElementById('stat-total-bookings').textContent = allBookings.length;
+      document.getElementById('stat-pending-bookings').textContent = pending;
+      document.getElementById('stat-confirmed-bookings').textContent = confirmed;
+      document.getElementById('stat-total-users').textContent = usersTotal;
+
+      const badge = document.getElementById('notifBadge');
+      if (pending > 0) {
+        badge.textContent = pending > 9 ? '9+' : pending;
+        badge.classList.remove('hidden');
+      } else {
+        badge.classList.add('hidden');
+      }
+    }
+
+    // ---------------------------------------------------------------------
+    // Bookings table
+    // ---------------------------------------------------------------------
+    const statusBadge = {
+      pending:      'bg-yellow-50 text-yellow-700',
+      confirmed:    'bg-blue-50 text-blue-700',
+      in_progress:  'bg-indigo-50 text-indigo-700',
+      completed:    'bg-green-50 text-green-700',
+      paid:         'bg-purple-50 text-purple-700',
+      cancelled:    'bg-red-50 text-red-700'
+    };
+
+    function badgeHtml(status) {
+      const label = String(status || '').replace('_', ' ');
+      const cls = statusBadge[status] || 'bg-gray-100 text-gray-600';
+      return `<span class="inline-block px-2.5 py-1 rounded-full text-xs font-semibold capitalize ${cls}">${esc(label)}</span>`;
+    }
+
+    function nameFor(userId) {
+      const u = usersById.get(String(userId));
+      return u ? u.username : `User #${userId}`;
+    }
+
+    function formatDate(iso) {
+      if (!iso) return '&mdash;';
+      try { return new Date(iso).toLocaleDateString('en-KE', { day: 'numeric', month: 'short', year: 'numeric' }); }
+      catch { return iso; }
+    }
+
+    function renderBookings() {
+      const filtered = currentFilter === 'all' ? allBookings : allBookings.filter(b => b.status === currentFilter);
+      if (!filtered.length) {
+        bookingsBody.innerHTML = `<tr><td colspan="7" class="text-center py-10 text-gray-400"><i class="fas fa-calendar-xmark text-2xl mb-2 block"></i>No ${currentFilter === 'all' ? '' : esc(currentFilter.replace('_',' ')) + ' '}bookings.</td></tr>`;
+        return;
+      }
+      bookingsBody.innerHTML = filtered.map(b => `
+        <tr class="hover:bg-gray-50 cursor-pointer" onclick="openDetailModal(${Number(b.id)})">
+          <td class="px-4 py-3 font-medium text-gray-800">${esc(b.service_name)}</td>
+          <td class="px-4 py-3">${esc(nameFor(b.client_user_id))}</td>
+          <td class="px-4 py-3 hidden md:table-cell">${esc(nameFor(b.provider_user_id))}</td>
+          <td class="px-4 py-3 hidden lg:table-cell">${esc(b.customer_phone)}</td>
+          <td class="px-4 py-3 hidden sm:table-cell">KSh ${esc(b.booking_fee_kes)}</td>
+          <td class="px-4 py-3">${badgeHtml(b.status)}</td>
+          <td class="px-4 py-3 hidden lg:table-cell text-gray-500">${formatDate(b.created_at)}</td>
+        </tr>
+      `).join('');
+    }
+
+    document.getElementById('filterTabs').addEventListener('click', e => {
+      const btn = e.target.closest('.filter-tab');
+      if (!btn) return;
+      document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+      btn.classList.add('active');
+      currentFilter = btn.dataset.status;
+      renderBookings();
+    });
+
+    // ---------------------------------------------------------------------
+    // Users table
+    // ---------------------------------------------------------------------
+    function renderUsers(users) {
+      const recent = [...users].sort((a, b) => Number(b.id) - Number(a.id)).slice(0, 8);
+      if (!recent.length) {
+        usersBody.innerHTML = `<tr><td colspan="5" class="text-center py-10 text-gray-400">No users found.</td></tr>`;
+        return;
+      }
+      usersBody.innerHTML = recent.map(u => `
+        <tr>
+          <td class="px-4 py-3 font-medium text-gray-800">${esc(u.username)}</td>
+          <td class="px-4 py-3 hidden sm:table-cell text-gray-500">${esc(u.email)}</td>
+          <td class="px-4 py-3"><span class="inline-block px-2.5 py-1 rounded-full text-xs font-semibold capitalize bg-gray-100 text-gray-600">${esc(u.role)}</span></td>
+          <td class="px-4 py-3 hidden md:table-cell text-gray-500">${esc(u.service || u.location || '\u2014')}</td>
+          <td class="px-4 py-3 hidden lg:table-cell text-gray-500">${formatDate(u.created_at)}</td>
+        </tr>
+      `).join('');
+      const note = document.getElementById('usersMoreNote');
+      if (usersTotal > recent.length) {
+        note.textContent = `Showing ${recent.length} of ${usersTotal} users. Use search to find someone specific.`;
+        note.classList.remove('hidden');
+      } else {
+        note.classList.add('hidden');
+      }
+    }
+
+    document.getElementById('userSearchForm').addEventListener('submit', async e => {
+      e.preventDefault();
+      const term = document.getElementById('userSearchInput').value.trim();
+      try {
+        const users = await loadUsers(term);
+        renderUsers(users);
+        renderStats();
+      } catch (err) {
+        showAlert('Could not search users: ' + err.message);
+      }
+    });
+
+    // ---------------------------------------------------------------------
+    // Booking detail modal
+    // ---------------------------------------------------------------------
+    const nextStatusActions = {
+      pending:     [['confirmed', 'Confirm', 'btn-confirm'], ['cancelled', 'Cancel', 'btn-cancel']],
+      confirmed:   [['in_progress', 'Start Job', 'btn-confirm'], ['cancelled', 'Cancel', 'btn-cancel']],
+      in_progress: [['completed', 'Mark Completed', 'btn-confirm'], ['cancelled', 'Cancel', 'btn-cancel']],
+      completed:   [],
+      paid:        [],
+      cancelled:   []
+    };
+
+    window.openDetailModal = function(id) {
+      const b = allBookings.find(x => Number(x.id) === Number(id));
+      if (!b) return;
+      activeBookingId = b.id;
+      document.getElementById('modalError').classList.add('hidden');
+      document.getElementById('m-service').textContent = b.service_name;
+      document.getElementById('m-id').textContent = 'Booking ID: ' + b.id;
+      document.getElementById('m-customer').textContent = nameFor(b.client_user_id);
+      document.getElementById('m-provider').textContent = nameFor(b.provider_user_id);
+      document.getElementById('m-phone').textContent = b.customer_phone || '\u2014';
+      document.getElementById('m-fee').textContent = `KSh ${b.booking_fee_kes}`;
+      document.getElementById('m-status').innerHTML = badgeHtml(b.status);
+      document.getElementById('m-created').textContent = formatDate(b.created_at);
+      document.getElementById('m-notes').textContent = b.notes || 'No additional notes.';
+
+      const actionsEl = document.getElementById('modalActions');
+      const buttons = (nextStatusActions[b.status] || []).map(([status, label, cls]) => {
+        const styles = cls === 'btn-confirm'
+          ? 'background: rgb(1,59,99); color:#fff;'
+          : 'background:#fef2f2; color:#b91c1c;';
+        return `<button class="text-sm font-semibold px-4 py-2 rounded-md" style="${styles}" onclick="setBookingStatus('${status}')">${label}</button>`;
+      });
+      if (b.status !== 'cancelled') {
+        buttons.push(`<button class="text-sm font-semibold px-4 py-2 rounded-md bg-purple-50 text-purple-700" onclick="markPaymentReceived()">Mark Payment Received</button>`);
+      }
+      buttons.push(`<button class="text-sm font-semibold px-4 py-2 rounded-md border border-gray-300 text-gray-600" onclick="closeDetailModal()">Close</button>`);
+      actionsEl.innerHTML = buttons.join('');
+
+      document.getElementById('bookingModal').classList.remove('hidden');
+    };
+
+    window.closeDetailModal = function() {
+      document.getElementById('bookingModal').classList.add('hidden');
+      activeBookingId = null;
+    };
+
+    document.getElementById('modalCloseBtn').addEventListener('click', closeDetailModal);
+    document.getElementById('bookingModal').addEventListener('click', e => {
+      if (e.target.id === 'bookingModal') closeDetailModal();
+    });
+
+    function showModalError(msg) {
+      const el = document.getElementById('modalError');
+      el.textContent = msg;
+      el.classList.remove('hidden');
+    }
+
+    window.setBookingStatus = async function(status) {
+      if (!activeBookingId) return;
+      try {
+        const res = await fetch(`${API_BASE}/api/bookings/${activeBookingId}/status`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
+          body: JSON.stringify({ status })
+        });
+        const data = await res.json();
+        if (!res.ok) { showModalError(data.message || 'Could not update booking'); return; }
+
+        const idx = allBookings.findIndex(b => Number(b.id) === Number(activeBookingId));
+        if (idx !== -1) allBookings[idx].status = status;
+        renderBookings();
+        renderStats();
+        openDetailModal(activeBookingId);
+      } catch (err) {
+        showModalError('Could not update booking: ' + err.message);
+      }
+    };
+
+    // Note: there's no endpoint yet to *read* a booking's current payment
+    // status, only to set it — so this always offers the action rather than
+    // reflecting whether a payment is already marked successful.
+    window.markPaymentReceived = async function() {
+      if (!activeBookingId) return;
+      try {
+        const res = await fetch(`${API_BASE}/api/bookings/${activeBookingId}/payment-status`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
+          body: JSON.stringify({ payment_status: 'success' })
+        });
+        const data = await res.json();
+        if (!res.ok) { showModalError(data.message || 'Could not update payment'); return; }
+
+        const idx = allBookings.findIndex(b => Number(b.id) === Number(activeBookingId));
+        if (idx !== -1) allBookings[idx].status = 'paid';
+        renderBookings();
+        renderStats();
+        openDetailModal(activeBookingId);
+      } catch (err) {
+        showModalError('Could not update payment: ' + err.message);
+      }
+    };
+
+    // ---------------------------------------------------------------------
+    // Notification bell / toast
+    // ---------------------------------------------------------------------
+    document.getElementById('notifBtn').addEventListener('click', () => {
+      document.getElementById('bookings-section').scrollIntoView({ behavior: 'smooth' });
+    });
+
+    function checkForNewBookings() {
+      if (!allBookings.length) return;
+      const maxId = Math.max(...allBookings.map(b => Number(b.id)));
+      if (!firstBookingsLoad && maxId > lastSeenBookingId) {
+        const latest = allBookings.find(b => Number(b.id) === maxId);
+        document.getElementById('notifToastSub').textContent =
+          `${nameFor(latest.client_user_id)} booked ${latest.service_name}.`;
+        const toast = document.getElementById('notifToast');
+        toast.classList.remove('translate-y-24', 'opacity-0', 'pointer-events-none');
+        setTimeout(() => toast.classList.add('translate-y-24', 'opacity-0', 'pointer-events-none'), 6000);
+      }
+      lastSeenBookingId = maxId;
+      localStorage.setItem('juakazi_admin_last_seen_booking_id', String(maxId));
+      firstBookingsLoad = false;
+    }
+
+    document.getElementById('notifToastClose').addEventListener('click', () => {
+      document.getElementById('notifToast').classList.add('translate-y-24', 'opacity-0', 'pointer-events-none');
+    });
+
+    // ---------------------------------------------------------------------
+    // Init + polling
+    // ---------------------------------------------------------------------
+    async function refreshAll() {
+      try {
+        const users = await loadUsers();
+        await loadBookings();
+        renderUsers(users);
+        renderBookings();
+        renderStats();
+        checkForNewBookings();
+      } catch (err) {
+        showAlert('Could not load dashboard data: ' + err.message);
+      }
+    }
+
+    async function init() {
+      const allowed = await checkAdminAccess();
+      if (!allowed) return;
+      await refreshAll();
+      setInterval(refreshAll, 20000);
+    }
+
+    init();
+  </script>
+</body>
+</html>
