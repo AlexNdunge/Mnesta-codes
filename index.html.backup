@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Juakazi — Find Trusted Local Services</title>
+  <meta name="description" content="Juakazi connects you with trusted local service providers in Kenya.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <main class="page">
+    <section class="hero" id="home">
+      <div class="hero-overlay"></div>
+
+      <nav class="navbar">
+        <a href="#home" class="brand">
+          <span class="brand-mark">J</span>
+          <span>Juakazi</span>
+        </a>
+
+        <div class="nav-pill" id="navMenu">
+          <div class="nav-item dropdown">
+            <button class="nav-link dropdown-toggle">Services <span>⌄</span></button>
+            <div class="dropdown-menu">
+              <a href="#services">Cleaning</a>
+              <a href="#services">Plumbing</a>
+              <a href="#services">Electrical</a>
+              <a href="#services">Moving</a>
+              <a href="#services">Repairs</a>
+            </div>
+          </div>
+
+          <div class="nav-item dropdown">
+            <button class="nav-link dropdown-toggle">Explore <span>⌄</span></button>
+            <div class="dropdown-menu">
+              <a href="#how-it-works">How it works</a>
+              <a href="#providers">Top providers</a>
+              <a href="#why">Why Juakazi</a>
+            </div>
+          </div>
+
+          <a class="nav-link" href="#how-it-works">How it works</a>
+          <a class="nav-link" href="#about">About</a>
+          <a class="nav-link" href="#providers">Become a Juakazi</a>
+        </div>
+
+
+        <button class="mobile-toggle" id="mobileToggle" aria-label="Open menu">☰</button>
+      </nav>
+
+      <div class="hero-content">
+        <div class="hero-word">JUAKAZI</div>
+
+        <div class="hero-bottom">
+          <div class="stats">
+            <div class="stat">
+              <strong>20K+</strong>
+              <span>Happy Customers</span>
+            </div>
+            <div class="stat">
+              <strong>2K+</strong>
+              <span>Trusted Providers</span>
+            </div>
+            <div class="stat">
+              <strong>5K+</strong>
+              <span>Jobs Completed</span>
+            </div>
+          </div>
+
+          <div class="hero-cta">
+            <div class="cta-row">
+              <a href="#services" class="primary-btn">Find a Service <span>↗</span></a>
+              <a href="#providers" class="round-btn" aria-label="Become a provider">↗</a>
+            </div>
+            <p>Find reliable local professionals for everyday jobs — from your home to your business.</p>
+          </div>
+
+          <div class="service-card" id="serviceCard">
+            <div class="service-image" id="serviceImage"></div>
+            <div class="service-card-content">
+              <span class="mini-label">POPULAR</span>
+              <h3 id="serviceTitle">Home Cleaning</h3>
+              <p id="serviceLocation">Available across Kenya</p>
+              <div class="progress"><span id="progressBar"></span></div>
+              <div class="card-footer"><span id="slideNumber">01/05</span><button id="nextService">→</button></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="intro" id="about">
+      <div class="section-number">01</div>
+      <div>
+        <p class="eyebrow">LOCAL SERVICES, SIMPLIFIED</p>
+        <h2>Whatever needs doing,<br><em>Juakazi</em> helps you get it done.</h2>
+      </div>
+      <a href="#services" class="section-arrow">→</a>
+    </section>
+
+    <section class="services-section" id="services">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">EXPLORE SERVICES</p>
+          <h2>Find the right person<br>for the job.</h2>
+        </div>
+        <p class="section-copy">Book trusted professionals near you for home, business and personal services.</p>
+      </div>
+
+      <div class="service-grid">
+        <article class="service-tile"><span>01</span><div class="tile-icon">✦</div><h3>Cleaning</h3><p>Home, office & deep cleaning</p><a href="#providers">Explore →</a></article>
+        <article class="service-tile"><span>02</span><div class="tile-icon">⌁</div><h3>Repairs</h3><p>Fixes, maintenance & installation</p><a href="#providers">Explore →</a></article>
+        <article class="service-tile"><span>03</span><div class="tile-icon">⌂</div><h3>Home Services</h3><p>Plumbing, electrical & more</p><a href="#providers">Explore →</a></article>
+        <article class="service-tile"><span>04</span><div class="tile-icon">◆</div><h3>Moving</h3><p>Moving, delivery & errands</p><a href="#providers">Explore →</a></article>
+      </div>
+    </section>
+
+    <section class="how-section" id="how-it-works">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">HOW IT WORKS</p>
+          <h2>Simple from start<br>to finish.</h2>
+        </div>
+      </div>
+      <div class="steps">
+        <div class="step"><span>01</span><h3>Choose a service</h3><p>Tell us what you need and where you need it.</p></div>
+        <div class="step"><span>02</span><h3>Pick a professional</h3><p>Compare trusted Juakazi providers and their profiles.</p></div>
+        <div class="step"><span>03</span><h3>Book & get it done</h3><p>Schedule the job, communicate and pay securely.</p></div>
+      </div>
+    </section>
+
+    <section class="provider-section" id="providers">
+      <div>
+        <p class="eyebrow">FOR PROFESSIONALS</p>
+        <h2>Turn your skills<br>into opportunity.</h2>
+        <p>Join Juakazi and connect with customers looking for reliable professionals in your area.</p>
+        <button class="dark-btn" id="providerBtn">Download Juakazi <Applet>App</Applet> <span>↗</span></button>
+      </div>
+      <div class="provider-art">
+        <div class="art-circle">J</div>
+        <span>SKILLS<br>MEET<br>OPPORTUNITY</span>
+      </div>
+    </section>
+
+    <footer>
+      <a href="#home" class="brand footer-brand"><span class="brand-mark">J</span><span>Juakazi</span></a>
+      <p>Local work. Trusted people. Better communities.</p>
+      <div class="footer-links">
+        <a href="#about">About</a><a href="#services">Services</a><a href="#how-it-works">How it works</a><a href="#providers">Join us</a>
+      </div>
+      <small>© 2026 Juakazi. All rights reserved.</small>
+    </footer>
+  </main>
+
+  <div class="modal" id="authModal">
+    <div class="modal-box">
+      <button class="modal-close" id="modalClose">×</button>
+      <div class="modal-logo">J</div>
+      <p class="eyebrow" id="modalEyebrow">WELCOME BACK</p>
+      <h2 id="modalTitle">Log in to Juakazi</h2>
+      <form id="authForm">
+        <label>Email or phone<input type="text" required placeholder="you@example.com"></label>
+        <label>Password<input type="password" required placeholder="••••••••"></label>
+        <button type="submit" class="primary-btn full">Continue <span>↗</span></button>
+      </form>
+      <p class="switch-auth" id="switchAuth">Don't have an account? <button>Sign up</button></p>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
