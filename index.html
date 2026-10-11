@@ -3,164 +3,178 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>JuaKazi - Find Trusted Service Providers</title>
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <title>Juakazi — Find Trusted Local Services</title>
+  <meta name="description" content="Juakazi connects you with trusted local service providers in Kenya.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
 </head>
-<body class="min-h-screen bg-gray-50">
+<body>
 
-  <!-- Header -->
-  <header class="bg-white shadow-sm">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center py-6">
-      <!-- Logo -->
-      <a href="index.html" class="text-2xl font-bold text-blue-600">JUAKAZI</a>
+  <main class="page">
+    <section class="hero" id="home">
+      <div class="hero-overlay"></div>
 
-      <!-- Desktop Nav -->
-      <nav class="hidden md:flex space-x-8">
-        <a href="services.html" class="text-blue-600 border-b-2 border-blue-600 px-3 py-2 rounded-md text-sm font-medium">Services</a>
-        <a href="about.html" class="text-gray-600 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium">About</a>
-        <a href="trust-safety.html" class="text-gray-600 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium">Trust & Safety</a>
-        <a href="contact.html" class="text-gray-600 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium">Contact</a>
+      <nav class="navbar">
+        <a href="#home" class="brand">
+          <span class="brand-mark">J</span>
+          <span>Juakazi</span>
+        </a>
+
+        <div class="nav-pill" id="navMenu">
+          <div class="nav-item dropdown">
+            <button class="nav-link dropdown-toggle">Services <span>⌄</span></button>
+            <div class="dropdown-menu">
+              <a href="#services">Cleaning</a>
+              <a href="#services">Plumbing</a>
+              <a href="#services">Electrical</a>
+              <a href="#services">Moving</a>
+              <a href="#services">Repairs</a>
+            </div>
+          </div>
+
+          <div class="nav-item dropdown">
+            <button class="nav-link dropdown-toggle">Explore <span>⌄</span></button>
+            <div class="dropdown-menu">
+              <a href="#how-it-works">How it works</a>
+              <a href="#providers">Top providers</a>
+              <a href="#why">Why Juakazi</a>
+            </div>
+          </div>
+
+          <a class="nav-link" href="#how-it-works">How it works</a>
+          <a class="nav-link" href="#about">About</a>
+          <a class="nav-link" href="#providers">Become a Juakazi</a>
+        </div>
+
+        <div class="nav-actions">
+          <button class="login-btn" id="loginBtn">Log in</button>
+          <button class="signup-btn" id="signupBtn">Sign up</button>
+        </div>
+
+        <button class="mobile-toggle" id="mobileToggle" aria-label="Open menu">☰</button>
       </nav>
 
-      <!-- Desktop Buttons -->
-      <div class="hidden md:flex space-x-4">
-        <a href="signin.html" class="text-gray-600 hover:text-blue-600">Log In</a>
-        <a href="signup.html" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">Sign Up</a>
-      </div>
+      <div class="hero-content">
+        <div class="hero-word">JUAKAZI</div>
 
-      <!-- Mobile Hamburger Button -->
-      <button id="menu-btn" class="md:hidden text-gray-600 hover:text-blue-600 focus:outline-none text-2xl">
-        ☰
-      </button>
-    </div>
+        <div class="hero-bottom">
+          <div class="stats">
+            <div class="stat">
+              <strong>20K+</strong>
+              <span>Happy Customers</span>
+            </div>
+            <div class="stat">
+              <strong>2K+</strong>
+              <span>Trusted Providers</span>
+            </div>
+            <div class="stat">
+              <strong>5K+</strong>
+              <span>Jobs Completed</span>
+            </div>
+          </div>
 
-    <!-- Mobile Menu -->
-    <div id="mobile-menu" class="hidden md:hidden bg-white px-4 pt-4 pb-6 space-y-4 shadow">
-      <a href="services.html" class="block text-gray-700 hover:text-blue-600">Services</a>
-      <a href="about.html" class="block text-gray-700 hover:text-blue-600">About</a>
-      <a href="contact.html" class="block text-gray-700 hover:text-blue-600">Contact Us</a>
-      <a href="trust-safety.html" class="block text-gray-700 hover:text-blue-600">Trust & Safety</a>
-      <a href="policy.html" class="block text-gray-700 hover:text-blue-600">Privacy & Policy</a>
-      <hr class="border-gray-200">
-      <a href="signin.html" class="block text-gray-700 hover:text-blue-600">Sign In</a>
-      <a href="signup.html" class="block px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">Sign Up</a>
-    </div>
-  </header>
+          <div class="hero-cta">
+            <div class="cta-row">
+              <a href="#services" class="primary-btn">Find a Service <span>↗</span></a>
+              <a href="#providers" class="round-btn" aria-label="Become a provider">↗</a>
+            </div>
+            <p>Find reliable local professionals for everyday jobs — from your home to your business.</p>
+          </div>
 
-  <!-- Hero Section -->
-  <section class="bg-white">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:grid lg:grid-cols-12 lg:gap-8 lg:items-center">
-      
-      <!-- Left Content -->
-      <div class="lg:col-span-6 text-center lg:text-left">
-        <h1 class="text-4xl sm:text-5xl font-extrabold text-gray-900">
-          Find Trusted <span class="text-blue-600">Service Providers</span>
-        </h1>
-        <p class="mt-4 text-lg text-gray-600">
-          Connect with verified professionals for all your service needs. From home repairs to personal services, find the right person for the job.
-        </p>
-        <div class="mt-6 flex flex-col sm:flex-row gap-3 justify-center lg:justify-start">
-          <a href="services.html" class="px-6 py-3 bg-blue-600 text-white rounded-md hover:bg-blue-700">
-            Find Services
-          </a>
-          <a href="signup.html" class="px-6 py-3 bg-blue-100 text-blue-700 rounded-md hover:bg-blue-200">
-            Become a Provider
-          </a>
+          <div class="service-card" id="serviceCard">
+            <div class="service-image" id="serviceImage"></div>
+            <div class="service-card-content">
+              <span class="mini-label">POPULAR</span>
+              <h3 id="serviceTitle">Home Cleaning</h3>
+              <p id="serviceLocation">Available across Kenya</p>
+              <div class="progress"><span id="progressBar"></span></div>
+              <div class="card-footer"><span id="slideNumber">01/05</span><button id="nextService">→</button></div>
+            </div>
+          </div>
         </div>
       </div>
+    </section>
 
-      <!-- Right Image -->
-      <div class="lg:col-span-6 mt-10 lg:mt-0 flex justify-center">
-        <img src="toon.png" alt="Cartoon service worker illustration" class="w-80 h-auto">
+    <section class="intro" id="about">
+      <div class="section-number">01</div>
+      <div>
+        <p class="eyebrow">LOCAL SERVICES, SIMPLIFIED</p>
+        <h2>Whatever needs doing,<br><em>Juakazi</em> helps you get it done.</h2>
       </div>
-    </div>
-  </section>
+      <a href="#services" class="section-arrow">→</a>
+    </section>
 
-  <!-- Popular Categories -->
-  <section class="py-12 bg-gray-50">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-      <h2 class="text-blue-600 font-semibold tracking-wide uppercase">Popular Categories</h2>
-      <p class="mt-2 text-3xl font-extrabold text-gray-900">Services you need, providers you trust</p>
-
-      <div class="mt-10 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-8">
-        <div><div class="w-14 h-14 flex items-center justify-center bg-blue-500 text-white rounded-md text-2xl mx-auto">🏠</div><p class="mt-3 font-medium">Home Cleaning</p></div>
-        <div><div class="w-14 h-14 flex items-center justify-center bg-blue-500 text-white rounded-md text-2xl mx-auto">🔧</div><p class="mt-3 font-medium">Plumbing</p></div>
-        <div><div class="w-14 h-14 flex items-center justify-center bg-blue-500 text-white rounded-md text-2xl mx-auto">⚡</div><p class="mt-3 font-medium">Electrical</p></div>
-        <div><div class="w-14 h-14 flex items-center justify-center bg-blue-500 text-white rounded-md text-2xl mx-auto">🌱</div><p class="mt-3 font-medium">Gardening</p></div>
-        <div><div class="w-14 h-14 flex items-center justify-center bg-blue-500 text-white rounded-md text-2xl mx-auto">📚</div><p class="mt-3 font-medium">Tutoring</p></div>
-        <div><div class="w-14 h-14 flex items-center justify-center bg-blue-500 text-white rounded-md text-2xl mx-auto">🐕</div><p class="mt-3 font-medium">Pet Care</p></div>
-        <div><div class="w-14 h-14 flex items-center justify-center bg-blue-500 text-white rounded-md text-2xl mx-auto">💄</div><p class="mt-3 font-medium">Beauty</p></div>
-        <div><div class="w-14 h-14 flex items-center justify-center bg-blue-500 text-white rounded-md text-2xl mx-auto">💪</div><p class="mt-3 font-medium">Fitness</p></div>
-      </div>
-    </div>
-  </section>
-
-  <!-- How it Works -->
-  <section class="py-12 bg-white">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-      <h2 class="text-blue-600 font-semibold tracking-wide uppercase">How it Works</h2>
-      <p class="mt-2 text-3xl font-extrabold text-gray-900">Simple steps to get things done</p>
-
-      <div class="mt-10 grid gap-8 md:grid-cols-3">
+    <section class="services-section" id="services">
+      <div class="section-heading">
         <div>
-          <div class="w-12 h-12 flex items-center justify-center bg-blue-500 text-white rounded-md text-xl mx-auto">1</div>
-          <h3 class="mt-4 font-medium text-gray-900">Search & Browse</h3>
-          <p class="mt-2 text-gray-600">Find the service you need and browse verified providers in your area.</p>
+          <p class="eyebrow">EXPLORE SERVICES</p>
+          <h2>Find the right person<br>for the job.</h2>
         </div>
+        <p class="section-copy">Book trusted professionals near you for home, business and personal services.</p>
+      </div>
+
+      <div class="service-grid">
+        <article class="service-tile"><span>01</span><div class="tile-icon">✦</div><h3>Cleaning</h3><p>Home, office & deep cleaning</p><a href="#providers">Explore →</a></article>
+        <article class="service-tile"><span>02</span><div class="tile-icon">⌁</div><h3>Repairs</h3><p>Fixes, maintenance & installation</p><a href="#providers">Explore →</a></article>
+        <article class="service-tile"><span>03</span><div class="tile-icon">⌂</div><h3>Home Services</h3><p>Plumbing, electrical & more</p><a href="#providers">Explore →</a></article>
+        <article class="service-tile"><span>04</span><div class="tile-icon">◆</div><h3>Moving</h3><p>Moving, delivery & errands</p><a href="#providers">Explore →</a></article>
+      </div>
+    </section>
+
+    <section class="how-section" id="how-it-works">
+      <div class="section-heading">
         <div>
-          <div class="w-12 h-12 flex items-center justify-center bg-blue-500 text-white rounded-md text-xl mx-auto">2</div>
-          <h3 class="mt-4 font-medium text-gray-900">Compare & Choose</h3>
-          <p class="mt-2 text-gray-600">Compare profiles, reviews, and prices to choose the best provider.</p>
-        </div>
-        <div>
-          <div class="w-12 h-12 flex items-center justify-center bg-blue-500 text-white rounded-md text-xl mx-auto">3</div>
-          <h3 class="mt-4 font-medium text-gray-900">Book & Enjoy</h3>
-          <p class="mt-2 text-gray-600">Book the service and enjoy professional work with peace of mind.</p>
+          <p class="eyebrow">HOW IT WORKS</p>
+          <h2>Simple from start<br>to finish.</h2>
         </div>
       </div>
+      <div class="steps">
+        <div class="step"><span>01</span><h3>Choose a service</h3><p>Tell us what you need and where you need it.</p></div>
+        <div class="step"><span>02</span><h3>Pick a professional</h3><p>Compare trusted Juakazi providers and their profiles.</p></div>
+        <div class="step"><span>03</span><h3>Book & get it done</h3><p>Schedule the job, communicate and pay securely.</p></div>
+      </div>
+    </section>
+
+    <section class="provider-section" id="providers">
+      <div>
+        <p class="eyebrow">FOR PROFESSIONALS</p>
+        <h2>Turn your skills<br>into opportunity.</h2>
+        <p>Join Juakazi and connect with customers looking for reliable professionals in your area.</p>
+        <button class="dark-btn" id="providerBtn">Become a Juakazi <span>↗</span></button>
+      </div>
+      <div class="provider-art">
+        <div class="art-circle">J</div>
+        <span>SKILLS<br>MEET<br>OPPORTUNITY</span>
+      </div>
+    </section>
+
+    <footer>
+      <a href="#home" class="brand footer-brand"><span class="brand-mark">J</span><span>Juakazi</span></a>
+      <p>Local work. Trusted people. Better communities.</p>
+      <div class="footer-links">
+        <a href="#about">About</a><a href="#services">Services</a><a href="#how-it-works">How it works</a><a href="#providers">Join us</a>
+      </div>
+      <small>© 2026 Juakazi. All rights reserved.</small>
+    </footer>
+  </main>
+
+  <div class="modal" id="authModal">
+    <div class="modal-box">
+      <button class="modal-close" id="modalClose">×</button>
+      <div class="modal-logo">J</div>
+      <p class="eyebrow" id="modalEyebrow">WELCOME BACK</p>
+      <h2 id="modalTitle">Log in to Juakazi</h2>
+      <form id="authForm">
+        <label>Email or phone<input type="text" required placeholder="you@example.com"></label>
+        <label>Password<input type="password" required placeholder="••••••••"></label>
+        <button type="submit" class="primary-btn full">Continue <span>↗</span></button>
+      </form>
+      <p class="switch-auth" id="switchAuth">Don't have an account? <button>Sign up</button></p>
     </div>
-  </section>
+  </div>
 
-  <!-- Footer -->
-  <footer class="bg-blue-800 text-gray-300">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      <div class="grid md:grid-cols-3 gap-8">
-        <div>
-          <h3 class="text-white text-xl font-bold">JuaKazi</h3>
-          <p class="mt-2 text-gray-400">Connecting you with trusted service providers in your community.</p>
-        </div>
-        <div>
-          <h4 class="text-white font-semibold">Services</h4>
-          <ul class="mt-3 space-y-2">
-            <li><a href="services.html" class="hover:text-white">Home Services</a></li>
-            <li><a href="services.html" class="hover:text-white">Personal Care</a></li>
-            <li><a href="services.html" class="hover:text-white">Professional Services</a></li>
-          </ul>
-        </div>
-        <div>
-          <h4 class="text-white font-semibold">Support</h4>
-          <ul class="mt-3 space-y-2">
-            <li><a href="contact.html" class="hover:text-white">Contact Us</a></li>
-            <li><a href="trust-safety.html" class="hover:text-white">Trust & Safety</a></li>
-            <li><a href="testimonials.html" class="hover:text-white">Testimonials</a></li>
-            <li><a href="terms.html" class="hover:text-white">Terms of Service</a></li>
-          </ul>
-        </div>
-      </div>
-      <div class="mt-8 border-t border-gray-700 pt-6 text-center text-gray-400">
-        &copy; 2025 JuaKazi. All rights reserved.
-      </div>
-    </div>
-  </footer>
-
-  <!-- JS for Mobile Menu -->
-  <script>
-    const menuBtn = document.getElementById('menu-btn');
-    const mobileMenu = document.getElementById('mobile-menu');
-
-    menuBtn.addEventListener('click', () => {
-      mobileMenu.classList.toggle('hidden');
-    });
-  </script>
+  <script src="script.js"></script>
 </body>
 </html>
